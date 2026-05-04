@@ -1,7 +1,7 @@
 import streamlit as st
 import plotly.graph_objects as go
 import pandas as pd
-from lotto.theme import inject_css, apply_layout, CRIMSON, GOLD, CHAMPAGNE, TEXT_DARK, PANEL_WHITE
+from lotto.theme import inject_css, apply_layout, CRIMSON, GOLD, PANEL, TEXT, TEXT_DARK, PANEL_WHITE
 from lotto.data_loader import load_data, compute_last2_frequency, filter_by_date
 from lotto.stats import compute_last2_heatmap_matrix, compute_max_drawdown_per_number, get_hot_cold_numbers
 
@@ -45,24 +45,24 @@ fig_heat = go.Figure(go.Heatmap(
     x=[str(i) for i in range(10)],
     y=[str(i) for i in range(10)],
     colorscale=[
-        [0, CHAMPAGNE], 
-        [0.4, GOLD], 
-        [1.0, CRIMSON]
+        [0.0, PANEL],
+        [0.4, GOLD],
+        [1.0, CRIMSON],
     ],
     text=labels,
     texttemplate="%{text}",
     hovertemplate="เลข: %{text}<br>ออก: %{z} ครั้ง<extra></extra>",
     showscale=True,
-    colorbar=dict(title="ครั้ง", tickfont=dict(color=TEXT_DARK)),
+    colorbar=dict(title="ครั้ง", tickfont=dict(color=TEXT)),
 ))
 fig_heat = apply_layout(
-    fig_heat, 
+    fig_heat,
     title="ความถี่การออกของเลขท้าย 2 ตัว",
-    xaxis_title="หลักหน่วย", 
+    xaxis_title="หลักหน่วย",
     yaxis_title="หลักสิบ",
-    height=500
+    height=500,
 )
-fig_heat.update_traces(textfont=dict(size=11, color=TEXT_DARK))
+fig_heat.update_traces(textfont=dict(size=11, color=TEXT))
 st.plotly_chart(fig_heat, width="stretch")
 
 # --- Hot / Cold ---

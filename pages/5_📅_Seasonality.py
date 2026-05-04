@@ -1,7 +1,7 @@
 import streamlit as st
 import plotly.graph_objects as go
 import pandas as pd
-from lotto.theme import inject_css, apply_layout, CRIMSON, GOLD, PANEL_WHITE, TEXT_DARK, CHAMPAGNE
+from lotto.theme import inject_css, apply_layout, CRIMSON, GOLD, PANEL, TEXT, TEXT_DARK, PANEL_WHITE
 from lotto.data_loader import load_data
 from lotto.seasonality import (compute_monthly_frequency, compute_dow_distribution,
                                 chi_squared_monthly, chi_squared_dow,
@@ -51,8 +51,8 @@ with tab1:
     st.markdown(f"""
     <div style="border:1px solid {color_p}33; background:{color_p}05; padding:16px; border-radius:8px; margin-bottom:16px;">
         <h4 style="color:{color_p}; margin:0;">Chi-Squared Test: เดือน × ความถี่เลข</h4>
-        <p style="margin:4px 0; color:{TEXT_DARK};">χ² = {chi2_m:.2f} &nbsp;|&nbsp; p-value = <b>{p_m:.4f}</b></p>
-        <p style="margin:0; color:{TEXT_DARK}; opacity:0.6;">{"ไม่พบหลักฐานว่าเดือนทำให้เลขออกต่างจากความสุ่มอย่างมีนัยสำคัญ" if p_m > 0.05 else "พบความต่างในข้อมูลย้อนหลัง แต่ยังไม่ใช่หลักฐานว่าใช้ทำนายอนาคตได้"}</p>
+        <p style="margin:4px 0; color:{TEXT};">χ² = {chi2_m:.2f} &nbsp;|&nbsp; p-value = <b>{p_m:.4f}</b></p>
+        <p style="margin:0; color:{TEXT}; opacity:0.6;">{"ไม่พบหลักฐานว่าเดือนทำให้เลขออกต่างจากความสุ่มอย่างมีนัยสำคัญ" if p_m > 0.05 else "พบความต่างในข้อมูลย้อนหลัง แต่ยังไม่ใช่หลักฐานว่าใช้ทำนายอนาคตได้"}</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -71,7 +71,7 @@ with tab1:
     month_labels = [MONTH_NAMES[m] for m in heat_data.index]
     fig_mh = go.Figure(go.Heatmap(
         z=heat_data.values, x=top20, y=month_labels,
-        colorscale=[[0, CHAMPAGNE], [0.5, GOLD], [1.0, CRIMSON]],
+        colorscale=[[0.0, PANEL], [0.5, GOLD], [1.0, CRIMSON]],
         hovertemplate="เดือน: %{y}<br>เลข: %{x}<br>ครั้ง: %{z}<extra></extra>",
     ))
     fig_mh = apply_layout(fig_mh, title="ความถี่รายเดือนของ Top-20 เลข",
@@ -86,8 +86,8 @@ with tab2:
     st.markdown(f"""
     <div style="border:1px solid {color_pd}33; background:{color_pd}05; padding:16px; border-radius:8px; margin-bottom:16px;">
         <h4 style="color:{color_pd}; margin:0;">Chi-Squared Test: วันในสัปดาห์</h4>
-        <p style="margin:4px 0; color:{TEXT_DARK};">χ² = {chi2_d:.2f} &nbsp;|&nbsp; p-value = <b>{p_d:.4f}</b></p>
-        <p style="margin:0; color:{TEXT_DARK}; opacity:0.6;">{"ไม่พบหลักฐานว่าวันในสัปดาห์เป็นปัจจัยพิเศษ" if p_d > 0.05 else "การกระจายวันไม่สม่ำเสมอจากปฏิทิน แต่ไม่ได้แปลว่าวันทำนายผลเลขได้"}</p>
+        <p style="margin:4px 0; color:{TEXT};">χ² = {chi2_d:.2f} &nbsp;|&nbsp; p-value = <b>{p_d:.4f}</b></p>
+        <p style="margin:0; color:{TEXT}; opacity:0.6;">{"ไม่พบหลักฐานว่าวันในสัปดาห์เป็นปัจจัยพิเศษ" if p_d > 0.05 else "การกระจายวันไม่สม่ำเสมอจากปฏิทิน แต่ไม่ได้แปลว่าวันทำนายผลเลขได้"}</p>
     </div>
     """, unsafe_allow_html=True)
 
