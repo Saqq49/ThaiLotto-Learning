@@ -1,134 +1,258 @@
 import plotly.graph_objects as go
 import streamlit as st
 
-# Thai Prestige Color Palette (Red-Gold)
-CRIMSON = "#BD001B"  # Royal Crimson
-GOLD = "#D4AF37"     # Metallic Gold
-GOLD_DARK = "#D3A42E" # Liquid Gold
-CHAMPAGNE = "#F6D365" # Soft Champagne
-BG_LIGHT = "#F5F5F5"  # Panel Gray
-TEXT_DARK = "#0B0F14" # Rich Charcoal
-PANEL_WHITE = "#FFFFFF"
+# Dark Luxury Palette
+CRIMSON   = "#C8102E"   # royal red
+GOLD      = "#D4AF37"   # metallic gold
+GOLD_DARK = "#A8892A"   # deep gold
+CHAMPAGNE = "#F0E8D5"   # warm off-white text
+BG_DARK   = "#07090D"   # near-black
+PANEL     = "#0F1420"   # card background
+PANEL_ALT = "#141C2E"   # slightly lighter panel
+BORDER    = "#D4AF3728" # gold border (subtle)
+TEXT      = "#F0E8D5"   # warm off-white
+TEXT_DIM  = "#7A7060"   # muted label text
 
-# Backward compatibility or alternate shades
-GOLD_DIM = GOLD_DARK
+# Aliases for backwards compatibility with existing pages
+TEXT_DARK   = TEXT
+PANEL_WHITE = PANEL
+GOLD_DIM    = GOLD_DARK
 
 PLOTLY_LAYOUT = dict(
     paper_bgcolor="rgba(0,0,0,0)",
-    plot_bgcolor="rgba(0,0,0,0)",
-    font=dict(color=TEXT_DARK, family="sans-serif"),
-    colorway=[CRIMSON, GOLD, GOLD_DARK, "#FF6B6B", "#FFC300"],
+    plot_bgcolor="rgba(7,9,13,0.6)",
+    font=dict(color=TEXT, family="'Cinzel', 'Sarabun', sans-serif", size=13),
+    colorway=[CRIMSON, GOLD, "#E8A838", "#FF6B6B", "#4488CC"],
     margin=dict(l=40, r=40, t=50, b=40),
-    hoverlabel=dict(bgcolor=PANEL_WHITE, font_color=TEXT_DARK),
+    hoverlabel=dict(bgcolor=PANEL_ALT, font_color=CHAMPAGNE, bordercolor=GOLD),
+    xaxis=dict(gridcolor="#FFFFFF08", linecolor="#FFFFFF12", zerolinecolor="#FFFFFF12"),
+    yaxis=dict(gridcolor="#FFFFFF08", linecolor="#FFFFFF12", zerolinecolor="#FFFFFF12"),
 )
 
-CUSTOM_CSS = f"""
+CUSTOM_CSS = """
 <style>
-    /* Main Background */
-    .stApp {{
-        background-color: {BG_LIGHT};
-        color: {TEXT_DARK};
-    }}
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Sarabun:wght@300;400;600&display=swap');
 
-    /* Sidebar */
-    [data-testid="stSidebar"] {{
-        background-color: {PANEL_WHITE};
-        border-right: 1px solid {GOLD}33;
-    }}
+    /* ── Base ── */
+    html, body, .stApp {
+        background-color: #07090D !important;
+        color: #F0E8D5 !important;
+        font-family: 'Sarabun', sans-serif !important;
+    }
 
-    /* Metric Cards */
-    .metric-container {{
-        background: {PANEL_WHITE};
-        border-top: 3px solid {GOLD};
-        border-radius: 8px;
-        padding: 20px;
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 6px; background: #0F1420; }
+    ::-webkit-scrollbar-thumb { background: #D4AF3744; border-radius: 3px; }
+
+    /* ── Sidebar ── */
+    [data-testid="stSidebar"] {
+        background: linear-gradient(180deg, #0A0D15 0%, #07090D 100%) !important;
+        border-right: 1px solid #D4AF3720;
+    }
+    [data-testid="stSidebar"] * { color: #F0E8D5 !important; }
+    [data-testid="stSidebarNav"] a:hover { background: #D4AF3712 !important; }
+
+    /* ── Headings ── */
+    h1, h2, h3 {
+        font-family: 'Cinzel', serif !important;
+        letter-spacing: 0.04em;
+    }
+    h1 {
+        background: linear-gradient(135deg, #D4AF37 0%, #F0E8D5 55%, #A8892A 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    h2 { color: #D4AF37 !important; }
+    h3 { color: #C5A04A !important; font-size: 1.1rem !important; }
+
+    /* ── Gold divider ── */
+    hr {
+        border: none;
+        height: 1px;
+        background: linear-gradient(90deg, transparent 0%, #D4AF3766 50%, transparent 100%);
+        margin: 1.5rem 0;
+    }
+
+    /* ── Custom metric cards ── */
+    .metric-container {
+        background: linear-gradient(145deg, #0F1420 0%, #141C2E 100%);
+        border: 1px solid #D4AF3728;
+        border-top: 2px solid #D4AF37;
+        border-radius: 12px;
+        padding: 22px 16px;
         text-align: center;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        transition: transform 0.2s ease;
-        margin-bottom: 20px;
-    }}
-    .metric-container:hover {{
-        transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(0,0,0,0.1);
-    }}
-    .metric-label {{
-        color: {TEXT_DARK};
-        font-size: 0.9rem;
-        font-weight: 500;
-        margin-bottom: 5px;
-        opacity: 0.7;
-    }}
-    .metric-value {{
-        color: {CRIMSON};
+        box-shadow: 0 4px 32px rgba(0,0,0,0.5), inset 0 1px 0 #D4AF3718;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+        margin-bottom: 16px;
+    }
+    .metric-container:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 40px rgba(212,175,55,0.18), inset 0 1px 0 #D4AF3728;
+    }
+    .metric-label {
+        color: #7A7060;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+    }
+    .metric-value {
+        background: linear-gradient(135deg, #D4AF37 0%, #F0E8D5 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-family: 'Cinzel', serif;
         font-size: 2rem;
-        font-weight: 800;
-        font-family: 'serif';
-    }}
+        font-weight: 700;
+        line-height: 1.2;
+    }
 
-    /* Tags */
-    .hot-tag {{
-        display: inline-block;
-        background: {CRIMSON}15;
-        border-left: 4px solid {CRIMSON};
-        color: {CRIMSON};
-        padding: 6px 15px;
-        margin: 4px 0;
-        border-radius: 0 5px 5px 0;
-        font-weight: 600;
-        width: 100%;
-    }}
-    .cold-tag {{
-        display: inline-block;
-        background: #E8F0F8;
-        border-left: 4px solid #4488CC;
-        color: #4488CC;
-        padding: 6px 15px;
-        margin: 4px 0;
-        border-radius: 0 5px 5px 0;
-        font-weight: 600;
-        width: 100%;
-    }}
+    /* ── Native st.metric ── */
+    [data-testid="stMetric"] {
+        background: linear-gradient(145deg, #0F1420 0%, #141C2E 100%);
+        border: 1px solid #D4AF3728;
+        border-top: 2px solid #D4AF37;
+        border-radius: 12px;
+        padding: 16px 14px;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+    }
+    [data-testid="stMetricLabel"] p {
+        color: #7A7060 !important;
+        font-size: 0.75rem !important;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+    [data-testid="stMetricValue"] {
+        color: #D4AF37 !important;
+        font-family: 'Cinzel', serif !important;
+    }
+    [data-testid="stMetricDelta"] { opacity: 0.8; }
 
-    /* Disclaimer */
-    .disclaimer {{
-        background: {CRIMSON}05;
-        border: 1px solid {CRIMSON}33;
-        padding: 15px;
-        border-radius: 8px;
-        color: {TEXT_DARK};
-        font-size: 0.85rem;
-        margin: 15px 0;
-        line-height: 1.5;
-    }}
-
-    /* Tabs */
-    .stTabs [data-baseweb="tab-list"] {{
-        gap: 10px;
-    }}
-    .stTabs [data-baseweb="tab"] {{
-        background-color: transparent;
-        border-radius: 5px 5px 0 0;
+    /* ── Tabs ── */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 4px;
+        background: transparent;
+        border-bottom: 1px solid #D4AF3728;
+    }
+    .stTabs [data-baseweb="tab"] {
+        background: transparent;
+        color: #7A7060 !important;
+        border-radius: 8px 8px 0 0;
         padding: 10px 20px;
-        color: {TEXT_DARK};
-    }}
-    .stTabs [aria-selected="true"] {{
-        background-color: {GOLD}15 !important;
-        border-bottom: 2px solid {GOLD} !important;
-        color: {CRIMSON} !important;
-    }}
+        font-family: 'Sarabun', sans-serif;
+    }
+    .stTabs [aria-selected="true"] {
+        background: #D4AF3710 !important;
+        color: #D4AF37 !important;
+        border-bottom: 2px solid #D4AF37 !important;
+    }
 
-    /* Mobile Responsive Columns Hack */
-    @media (max-width: 768px) {{
-        [data-testid="stHorizontalBlock"] {{
-            flex-direction: row !important;
-            flex-wrap: wrap !important;
-        }}
-        [data-testid="stHorizontalBlock"] > div {{
-            width: calc(50% - 0.5rem) !important;
+    /* ── Tags ── */
+    .hot-tag {
+        display: inline-block;
+        background: #C8102E15;
+        border-left: 3px solid #C8102E;
+        color: #FF6B7A;
+        padding: 6px 14px;
+        margin: 4px 0;
+        border-radius: 0 6px 6px 0;
+        font-weight: 600;
+        width: 100%;
+        font-size: 0.95rem;
+    }
+    .cold-tag {
+        display: inline-block;
+        background: #0D1E30;
+        border-left: 3px solid #4488CC;
+        color: #88BBDD;
+        padding: 6px 14px;
+        margin: 4px 0;
+        border-radius: 0 6px 6px 0;
+        font-weight: 600;
+        width: 100%;
+        font-size: 0.95rem;
+    }
+
+    /* ── Disclaimer ── */
+    .disclaimer {
+        background: linear-gradient(135deg, #C8102E10 0%, transparent 100%);
+        border: 1px solid #C8102E33;
+        border-left: 3px solid #C8102E;
+        padding: 14px 18px;
+        border-radius: 8px;
+        color: #7A7060;
+        font-size: 0.85rem;
+        margin: 16px 0;
+        line-height: 1.6;
+    }
+
+    /* ── Buttons ── */
+    .stButton > button {
+        background: linear-gradient(135deg, #C8102E 0%, #8B0015 100%) !important;
+        color: #F0E8D5 !important;
+        border: 1px solid #C8102E60 !important;
+        border-radius: 8px !important;
+        font-family: 'Sarabun', sans-serif !important;
+        font-weight: 600 !important;
+        letter-spacing: 0.03em !important;
+        transition: all 0.2s ease !important;
+        padding: 0.5rem 1.5rem !important;
+    }
+    .stButton > button:hover {
+        background: linear-gradient(135deg, #E01030 0%, #C8102E 100%) !important;
+        box-shadow: 0 4px 24px #C8102E44 !important;
+        transform: translateY(-1px) !important;
+    }
+    .stButton > button[kind="primary"] {
+        background: linear-gradient(135deg, #D4AF37 0%, #A8892A 100%) !important;
+        color: #07090D !important;
+        border: none !important;
+        font-weight: 700 !important;
+    }
+    .stButton > button[kind="primary"]:hover {
+        box-shadow: 0 4px 24px #D4AF3744 !important;
+    }
+
+    /* ── Inputs ── */
+    [data-testid="stTextInput"] input,
+    [data-testid="stNumberInput"] input {
+        background: #0F1420 !important;
+        color: #F0E8D5 !important;
+        border: 1px solid #D4AF3730 !important;
+        border-radius: 8px !important;
+    }
+    [data-testid="stSelectbox"] > div > div {
+        background: #0F1420 !important;
+        color: #F0E8D5 !important;
+        border: 1px solid #D4AF3730 !important;
+        border-radius: 8px !important;
+    }
+
+    /* ── Dataframe ── */
+    [data-testid="stDataFrame"] {
+        border: 1px solid #D4AF3722;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    /* ── Info / Warning / Error boxes ── */
+    [data-testid="stAlert"] {
+        background: #0F1420;
+        border-radius: 8px;
+    }
+
+    /* ── Mobile ── */
+    @media (max-width: 768px) {
+        h1 { font-size: 1.5rem !important; }
+        .metric-value { font-size: 1.5rem !important; }
+        [data-testid="stHorizontalBlock"] { flex-wrap: wrap !important; }
+        [data-testid="stHorizontalBlock"] > div {
             min-width: calc(50% - 0.5rem) !important;
             flex: 1 1 calc(50% - 0.5rem) !important;
-        }}
-    }}
+        }
+    }
 </style>
 """
 
