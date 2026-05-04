@@ -1,5 +1,4 @@
 import pandas as pd
-import numpy as np
 import streamlit as st
 from pathlib import Path
 
@@ -9,7 +8,6 @@ PROCESSED_PATH = Path(__file__).parent.parent / "data" / "processed" / "lottery_
 @st.cache_data(ttl=3600)
 def load_data() -> pd.DataFrame:
     if not PROCESSED_PATH.exists():
-        st.error("ไม่พบข้อมูล กรุณารัน `.venv/bin/python -m lotto.scraper` ก่อน")
         return pd.DataFrame()
 
     df = pd.read_parquet(PROCESSED_PATH)
@@ -29,13 +27,9 @@ def load_data() -> pd.DataFrame:
 
 
 def _validate(df: pd.DataFrame) -> pd.DataFrame:
-    before = len(df)
     df = df[df["Last_2"].str.match(r"^\d{2}$", na=False)]
     df = df[df["Prize_1"].str.match(r"^\d{6}$", na=False)]
     df = df.drop_duplicates("Draw_Date")
-    after = len(df)
-    if before != after:
-        st.warning(f"กรองข้อมูลผิดปกติออก {before - after} แถว")
     return df
 
 
