@@ -5,7 +5,7 @@ from lotto.theme import inject_css, apply_layout, CRIMSON, GOLD, PANEL_WHITE, TE
 from lotto.data_loader import load_data
 from lotto.backtest import run_backtest, PRIZE_PAYOUTS, TICKET_PRICE
 
-st.set_page_config(page_title="Strategy Backtester", page_icon="💰", layout="wide")
+st.set_page_config(page_title="ลองแทงทิพย์: รวยหรือเจ๊ง?", page_icon="💰", layout="wide")
 inject_css()
 
 df = st.session_state["df"] if "df" in st.session_state else load_data()
@@ -13,8 +13,8 @@ if df.empty:
     st.error("ไม่พบข้อมูล")
     st.stop()
 
-st.title("💰 Lottery Strategy Backtester")
-st.markdown('<div class="disclaimer">⚠️ เครื่องมือนี้จำลองความเสี่ยงทางการเงิน ไม่ใช่คำแนะนำการลงทุน — ผลลัพธ์ส่วนใหญ่คือการขาดทุน</div>', unsafe_allow_html=True)
+st.title("💰 ลองแทงทิพย์: รวยหรือเจ๊ง?")
+st.markdown('<div class="disclaimer">⚠️ จำลองความเสี่ยงแบบไม่ต้องเสียเงินจริง — มาดูกันว่าถ้าเราซื้อตามแผนที่ตั้งไว้ ผลสุดท้ายจะรอดหรือจะร่วง</div>', unsafe_allow_html=True)
 
 with st.sidebar:
     st.header("ตั้งค่ากลยุทธ์")

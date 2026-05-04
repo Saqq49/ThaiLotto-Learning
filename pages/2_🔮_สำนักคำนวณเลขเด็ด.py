@@ -4,7 +4,7 @@ from lotto.theme import inject_css, apply_layout, GOLD, CRIMSON, PANEL_WHITE, TE
 from lotto.data_loader import load_data
 from lotto.predictors import frequency_predictor, overdue_predictor, recency_weighted_predictor, random_predictor
 
-st.set_page_config(page_title="Prediction Lab", page_icon="🔮", layout="wide")
+st.set_page_config(page_title="สำนักคำนวณเลขเด็ด", page_icon="🔮", layout="wide")
 inject_css()
 
 df = st.session_state["df"] if "df" in st.session_state else load_data()
@@ -12,8 +12,8 @@ if df.empty:
     st.error("ไม่พบข้อมูล")
     st.stop()
 
-st.title("🔮 Prediction Lab")
-st.markdown('<div class="disclaimer">⚠️ ตัวเลขที่แสดงเป็นผลจากวิธีคำนวณย้อนหลังเท่านั้น ไม่ใช่เลขเด็ดหรือคำแนะนำให้ซื้อ สลากกินแบ่งเป็นการสุ่มสมบูรณ์แบบ</div>', unsafe_allow_html=True)
+st.title("🔮 สำนักคำนวณเลขเด็ด")
+st.markdown("ลองปรุงเลขด้วยสูตรคณิตศาสตร์ — จะคำนวณแบบไหนก็เลือกได้ตามใจชอบ")
 
 with st.sidebar:
     st.header("ตั้งค่า")

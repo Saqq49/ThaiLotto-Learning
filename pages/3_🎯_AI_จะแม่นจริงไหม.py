@@ -5,7 +5,7 @@ from lotto.theme import inject_css, apply_layout, CRIMSON, GOLD, TEXT_DARK, PANE
 from lotto.data_loader import load_data
 from lotto.walk_forward import walk_forward_validate
 
-st.set_page_config(page_title="AI Reality Check", page_icon="🎯", layout="wide")
+st.set_page_config(page_title="AI จะแม่นจริงไหม?", page_icon="🎯", layout="wide")
 inject_css()
 
 df = st.session_state["df"] if "df" in st.session_state else load_data()
@@ -13,8 +13,8 @@ if df.empty:
     st.error("ไม่พบข้อมูล")
     st.stop()
 
-st.title("🎯 AI Prediction Reality Check")
-st.error("⚠️ หน้านี้มีจุดประสงค์เพื่อ reality check — วัดว่าวิธีจัดอันดับเลขจากข้อมูลย้อนหลังทำได้ดีกว่าการสุ่มจริงหรือไม่")
+st.title("🎯 AI จะแม่นจริงไหม?")
+st.error("⚠️ หน้านี้เรามาจับโป๊ะ AI — วัดกันไปเลยว่าถ้าให้ AI เลือกเลขให้ย้อนหลัง มันจะทายถูกบ่อยกว่าการสุ่มไหม")
 
 with st.sidebar:
     st.header("ตั้งค่า Walk-Forward")

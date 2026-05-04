@@ -6,7 +6,7 @@ from lotto.data_loader import load_data
 from lotto.theme import CRIMSON, GOLD, GOLD_DARK, apply_layout, inject_css, render_metric
 
 
-st.set_page_config(page_title="Data Overview", page_icon="📋", layout="wide")
+st.set_page_config(page_title="ส่องโพยสถิติ", page_icon="📋", layout="wide")
 inject_css()
 
 # Load data
@@ -15,8 +15,8 @@ if df.empty:
     st.error("ไม่พบข้อมูล")
     st.stop()
 
-st.title("📋 Data Overview & Quality")
-st.markdown("ระบบวิเคราะห์ความสมบูรณ์และโครงสร้างของข้อมูลสถิติสลากกินแบ่งรัฐบาล")
+st.title("📋 ส่องโพยสถิติ")
+st.markdown("คลังข้อมูลสถิติสลากกินแบ่งรัฐบาล — เช็กให้ชัวร์ก่อนเริ่มวิเคราะห์")
 
 # Prepare data
 df = df.copy().sort_values("Draw_Date").reset_index(drop=True)

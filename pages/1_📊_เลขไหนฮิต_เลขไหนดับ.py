@@ -5,7 +5,7 @@ from lotto.theme import inject_css, apply_layout, CRIMSON, GOLD, PANEL, TEXT, TE
 from lotto.data_loader import load_data, compute_last2_frequency, filter_by_date
 from lotto.stats import compute_last2_heatmap_matrix, compute_max_drawdown_per_number, get_hot_cold_numbers
 
-st.set_page_config(page_title="Historical Visualizer", page_icon="📊", layout="wide")
+st.set_page_config(page_title="เลขไหนฮิต เลขไหนดับ", page_icon="📊", layout="wide")
 inject_css()
 
 df = st.session_state["df"] if "df" in st.session_state else load_data()
@@ -13,8 +13,8 @@ if df.empty:
     st.error("ไม่พบข้อมูล")
     st.stop()
 
-st.title("📊 Historical Visualizer")
-st.markdown("แสดงภาพรวมสถิติความถี่ของเลขท้าย 2 ตัวในอดีต")
+st.title("📊 เลขไหนฮิต เลขไหนดับ")
+st.markdown("สถิติความถี่ของเลขท้าย 2 ตัว — มาดูว่าเลขไหนมาแรง เลขไหนหายเงียบ")
 
 # Sidebar filters
 with st.sidebar:
