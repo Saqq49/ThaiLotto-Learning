@@ -1,16 +1,20 @@
-import pandas as pd
 import streamlit as st
 from pathlib import Path
 
-PROCESSED_PATH = Path(__file__).parent.parent / "data" / "processed" / "lottery_results.parquet"
+import pandas as pd
+
+
+DATA_DIR = Path(__file__).parent.parent / "data" / "processed"
+PROCESSED_PATH = DATA_DIR / "lottery_results.parquet"
+PROCESSED_CSV_PATH = DATA_DIR / "lottery_results.csv"
 
 
 @st.cache_data(ttl=3600)
 def load_data() -> pd.DataFrame:
-    if not PROCESSED_PATH.exists():
+    df = _read_processed_data()
+    if df.empty:
         return pd.DataFrame()
 
-    df = pd.read_parquet(PROCESSED_PATH)
     df["Draw_Date"] = pd.to_datetime(df["Draw_Date"])
     df["Day_of_Week"] = df["Draw_Date"].dt.strftime("%A")
     df["Month"] = df["Draw_Date"].dt.month
@@ -24,6 +28,20 @@ def load_data() -> pd.DataFrame:
 
     df = _validate(df)
     return df.sort_values("Draw_Date").reset_index(drop=True)
+
+
+def _read_processed_data() -> pd.DataFrame:
+    """Load bundled data with a CSV fallback for constrained deploy runtimes."""
+    if PROCESSED_PATH.exists():
+        try:
+            return pd.read_parquet(PROCESSED_PATH)
+        except Exception:
+            pass
+
+    if PROCESSED_CSV_PATH.exists():
+        return pd.read_csv(PROCESSED_CSV_PATH)
+
+    return pd.DataFrame()
 
 
 def _validate(df: pd.DataFrame) -> pd.DataFrame:

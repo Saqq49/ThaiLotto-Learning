@@ -180,6 +180,25 @@ The environment is now functional again in the current Codex shell on `x86_64` (
   - data quality script: passed
   - AppTest smoke test: `app.py` and all 6 Thai pages passed
 
+### Session 16: Data Loading Fallback by Codex (2026-05-05)
+
+- [x] User reported that the deployed website still shows a data error.
+- [x] Checked deployed URL from the terminal:
+  - endpoint responds with Streamlit HTTP `303` redirect/auth flow, so the site is reachable but the terminal cannot inspect the rendered UI directly.
+- [x] Verified GitHub `main` contains the bundled parquet data:
+  - `data/processed/lottery_results.parquet`
+  - size: 19,981 bytes
+- [x] Verified local `load_data()` still reads the data correctly:
+  - rows: 461
+  - date range: `2006-12-30` to `2026-05-02`
+- [x] Added deploy-safe CSV fallback:
+  - generated `data/processed/lottery_results.csv` with the same 461 rows.
+  - updated `lotto/data_loader.py` to read parquet first, then fall back to CSV if parquet is missing or unreadable.
+- [x] Confirmed fallback path works by forcing the parquet path to a missing file and loading from CSV.
+- [x] Note: concurrent uncommitted persona/UI edits exist in `app.py`, `lotto/theme.py`, `pages/0_📋_ส่องโพยสถิติ.py`, and `pages/2_🔮_สำนักคำนวณเลขเด็ด.py`; Codex did not include those in this data-fallback commit.
+- [x] Verification:
+  - tests: **27/27 passed** in 1.87s
+
 ### Session 13: Codex Final UI/Deployment Review (2026-05-04)
 
 - [x] Confirmed Gemini's Session 12 UI update was present in `session.md`.
@@ -196,7 +215,7 @@ The environment is now functional again in the current Codex shell on `x86_64` (
 
 ## Current Blockers
 
-None. Dashboard is polished, deployed, and the latest runtime/display issue has been fixed and pushed to `main` to trigger Streamlit Cloud redeploy.
+None for the data pipeline after Session 16. Dashboard is deployed, the Plotly runtime/display issue has been fixed, and data loading now has a CSV fallback for deploy runtimes where parquet/pyarrow read fails.
 
 ## Initial Codex Review Findings
 ... (unchanged)
@@ -242,3 +261,4 @@ None. Dashboard is polished, deployed, and the latest runtime/display issue has 
 | 2026-05-04 | Final UI Review | Completed, 27/27 tests pass | Streamlit Community Cloud deploy |
 | 2026-05-04 | Dark Luxury Deploy | Completed, deployed to Streamlit Cloud | Post-deploy QA |
 | 2026-05-05 | Runtime Display Fix | Completed and pushed, 27/27 tests pass, AppTest all pages pass | Streamlit Cloud redeploy |
+| 2026-05-05 | Data Loading Fallback | Completed locally, 27/27 tests pass | Push/redeploy |
