@@ -195,9 +195,16 @@ The environment is now functional again in the current Codex shell on `x86_64` (
   - generated `data/processed/lottery_results.csv` with the same 461 rows.
   - updated `lotto/data_loader.py` to read parquet first, then fall back to CSV if parquet is missing or unreadable.
 - [x] Confirmed fallback path works by forcing the parquet path to a missing file and loading from CSV.
-- [x] Note: concurrent uncommitted persona/UI edits exist in `app.py`, `lotto/theme.py`, `pages/0_📋_ส่องโพยสถิติ.py`, and `pages/2_🔮_สำนักคำนวณเลขเด็ด.py`; Codex did not include those in this data-fallback commit.
+- [x] Pushed data fallback to GitHub `main` in commit `8e41735`.
+- [x] Confirmed GitHub raw CSV fallback is available:
+  - `https://raw.githubusercontent.com/Saqq49/ThaiLotto-Learning/main/data/processed/lottery_results.csv`
+  - HTTP `200`, size 56,979 bytes.
+- [x] Note: concurrent uncommitted persona/UI edits exist in `app.py`, `lotto/theme.py`, `pages/0_📋_ส่องโพยสถิติ.py`, `pages/1_📊_เลขไหนฮิต_เลขไหนดับ.py`, and `pages/2_🔮_สำนักคำนวณเลขเด็ด.py`; Codex did not include those in this data-fallback commit.
 - [x] Verification:
   - tests: **27/27 passed** in 1.87s
+  - `py_compile`: passed
+  - data quality script: passed
+  - AppTest smoke test: `app.py` and all 6 Thai pages passed
 
 ### Session 13: Codex Final UI/Deployment Review (2026-05-04)
 
@@ -261,4 +268,4 @@ None for the data pipeline after Session 16. Dashboard is deployed, the Plotly r
 | 2026-05-04 | Final UI Review | Completed, 27/27 tests pass | Streamlit Community Cloud deploy |
 | 2026-05-04 | Dark Luxury Deploy | Completed, deployed to Streamlit Cloud | Post-deploy QA |
 | 2026-05-05 | Runtime Display Fix | Completed and pushed, 27/27 tests pass, AppTest all pages pass | Streamlit Cloud redeploy |
-| 2026-05-05 | Data Loading Fallback | Completed locally, 27/27 tests pass | Push/redeploy |
+| 2026-05-05 | Data Loading Fallback | Completed and pushed, 27/27 tests pass, AppTest all pages pass | Wait for Streamlit Cloud redeploy |
