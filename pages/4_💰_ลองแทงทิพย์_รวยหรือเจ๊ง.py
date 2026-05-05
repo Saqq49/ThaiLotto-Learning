@@ -104,6 +104,11 @@ st.dataframe(records_df, width="stretch", hide_index=True,
 
 # Financial summary
 st.markdown("---")
+layman_roi = "ความคุ้มค่าของการ 'ลงทุน' - สรุปให้ดูว่าทุกๆ 100 บาทที่เราควักกระเป๋าจ่ายไป เราจะได้เงินกลับคืนมาเฉลี่ยกี่บาท (ส่วนใหญ่มักจะขาดทุน เพราะถูกรางวัลยากกว่าความน่าจะเป็นเยอะ)"
+math_roi = "การคำนวณค่าคาดหมายของผลตอบแทน (Expected Return) และอัตราส่วนผลตอบแทนต่อส่วนเปลี่ยนในสินทรัพย์สุทธิ (Return on Investment) เพื่อวัดประสิทธิภาพเชิงเศรษฐศาสตร์ของกลยุทธ์การตัดสินใจภายใต้สภาวะไม่แน่นอน"
+formula_roi = r"ROI = \frac{E[X] - Cost}{Cost} = \frac{\sum (p_i \cdot r_i) - Cost}{Cost}"
+render_explanation(layman_roi, math_roi, formula_roi)
+
 col_a, col_b = st.columns(2)
 with col_a:
     st.metric("เงินที่ใช้ทั้งหมด (฿)", f"{result.total_spent:,.0f}")

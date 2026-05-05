@@ -50,9 +50,9 @@ with m_cols[3]:
 
 st.markdown("---")
 
-layman_integrity = "ความเป๊ะของข้อมูล - เช็กว่ามีงวดไหนข้อมูลหายหรือพิมพ์ผิดไหม ถ้าเต็ม 100 คือข้อมูลเนียนกริบ"
-math_integrity = "Integrity Score คำนวณจากสัดส่วนของข้อมูลที่สมบูรณ์ (Complete cases) ในคอลัมน์ที่จำเป็น (Essential fields)"
-formula_integrity = r"Integrity = \frac{\sum_{i \in Essential} N_{total} - N_{missing, i}}{\text{len}(Essential) \times N_{total}} \times 100\%"
+layman_integrity = "เช็กความเนียนของโพย - ดูว่าข้อมูลที่เราเก็บมามันแหว่งตรงไหนไหม มีเลขที่พิมพ์ตกหรือหายไปหรือเปล่า ถ้าได้ 100% คือข้อมูลเต็มครบทุกงวด"
+math_integrity = "การประเมินค่าความสมบูรณ์ของชุดข้อมูล (Data Completeness Analysis) โดยการหาอัตราส่วนระหว่างจำนวนระเบียนที่ไม่มีค่าว่าง (Non-null values) ต่อจำนวนระเบียนทั้งหมดในกลุ่มตัวแปรหลัก (Primary features)"
+formula_integrity = r"Integrity Score = \frac{\sum_{j \in \mathcal{F}} \sum_{i=1}^{N} \mathbb{1}(x_{i,j} \neq \text{null})}{|\mathcal{F}| \times N} \times 100\%"
 render_explanation(layman_integrity, math_integrity, formula_integrity)
 
 st.markdown("---")

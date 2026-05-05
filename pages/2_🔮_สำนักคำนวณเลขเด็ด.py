@@ -26,23 +26,23 @@ train_df = df.tail(window)
 
 if method == "Frequency":
     predictions = frequency_predictor(train_df, top_n=top_n)
-    layman = "เลือกเลขที่ออกบ่อยที่สุดในช่วงเวลาที่เลือก"
-    math = "คำนวณความน่าจะเป็นแบบ Laplace Smoothing เพื่อป้องกันปัญหาเลขที่ไม่เคยออกเลยมีความน่าจะเป็นเป็นศูนย์"
+    layman = "สูตร 'เลขขยัน' - เน้นตามเลขที่มาบ่อยๆ เพราะเชื่อว่าช่วงนี้กำลังเดินดี เลขไหนออกซ้ำบ่อยก็มีสิทธิจะมาอีก"
+    math = "การประมาณค่าความน่าจะเป็นแบบ Empirical Distribution ด้วยเทคนิค Laplace Smoothing (Additive Smoothing) เพื่อลดอคติจากกลุ่มตัวอย่างที่มีขนาดจำกัดและป้องกันความน่าจะเป็นเป็นศูนย์ (Zero-frequency problem)"
     formula = r"P(x) = \frac{count(x) + 1}{\sum_{i=0}^{99} (count(i) + 1)}"
 elif method == "Overdue":
     predictions = overdue_predictor(train_df, top_n=top_n)
-    layman = "เลือกเลขที่ห่างจากการออกครั้งล่าสุดมากที่สุด (เลขที่หายหน้าไปนานที่สุด)"
-    math = "วัดระยะห่าง (Gap) ระหว่างงวดปัจจุบันกับงวดล่าสุดที่เลขนั้นออก แล้วทำการ Normalize ให้ค่าอยู่ระหว่าง 0 ถึง 1"
+    layman = "สูตร 'เลขตาม' - หาเลขที่อั้นมานาน ไม่ยอมออกซักที ยิ่งหายไปนานเท่าไหร่ ยิ่งมีโอกาสจะโผล่มาให้เห็น (ตามความเชื่อเรื่องเลขวนลูป)"
+    math = "การวิเคราะห์ระยะเวลาห่าง (Waiting Time) ในกระบวนการแบบสุ่ม โดยคำนวณจากจำนวนหน่วยเวลา (งวด) ที่ไม่เกิดเหตุการณ์ (Draw event) และทำการปรับบรรทัดฐาน (Normalization) ค่าสถิติคงค้างเพื่อให้สามารถเปรียบเทียบเชิงสัมพัทธ์ได้"
     formula = r"Score(x) = \frac{T - last\_seen(x)}{\max_{i} (T - last\_seen(i))}"
 elif method == "Recency-Weighted":
     predictions = recency_weighted_predictor(train_df, top_n=top_n)
-    layman = "ให้น้ำหนักมากขึ้นกับงวดล่าสุด เลขที่เพิ่งออกไปจะเด่นกว่าเลขที่ออกนานแล้ว"
-    math = "ใช้ Exponential Decay Weighting โดยให้ค่าน้ำหนักลดลงตามลำดับงวดที่ย้อนกลับไป"
+    layman = "สูตร 'เลขกระแส' - ให้น้ำหนักกับงวดใกล้ๆ มากกว่างวดไกลๆ เลขที่เพิ่งออกไปหมาดๆ จะถือว่ากำลัง 'ร้อน' และเด่นกว่าเลขเก่า"
+    math = "การคำนวณฟังก์ชันน้ำหนักถ่วงเวลา (Time-weighted scoring) โดยใช้เทคนิค Exponential Decay เพื่อให้ความสำคัญกับข้อมูลล่าสุด (Recency bias) ในเชิงเรขาคณิต"
     formula = r"Score(x) = \sum_{t=1}^{T} \mathbb{1}(draw_t = x) \cdot \alpha^{T-t}"
 else:
     predictions = random_predictor(top_n=top_n)
-    layman = "สุ่มเลขแบบเท่าเทียมกันทุกเลข เพื่อใช้เป็นเกณฑ์มาตรฐาน (Baseline)"
-    math = "ใช้ Discrete Uniform Distribution โดยที่ทุกเลขมีความน่าจะเป็นเท่ากับ 1/100"
+    layman = "สูตร 'วัดดวง' - สุ่มเลขแบบแฟร์ๆ เท่ากันทุกตัว ไม่สนสถิติ เพราะเชื่อว่าหวยทุกลูกมีสิทธิถูกดึงขึ้นมาเท่ากัน"
+    math = "สมมติฐานกระบวนการสุ่มแบบ Discrete Uniform Distribution โดยกำหนดให้ตัวแปรสุ่มทุกตัวในปริภูมิตัวอย่างมีฟังก์ชันมวลความน่าจะเป็น (Probability Mass Function) ที่เท่ากัน"
     formula = r"P(X=x) = \frac{1}{100}, \forall x \in \{00, 01, ..., 99\}"
 
 st.subheader(f"เลขที่วิธีนี้จัดอันดับสูง ({method})")

@@ -17,11 +17,10 @@ if df.empty:
 st.title("🎯 AI จะแม่นจริงไหม?")
 st.error("⚠️ หน้านี้เรามาจับโป๊ะ AI — วัดกันไปเลยว่าถ้าให้ AI เลือกเลขให้ย้อนหลัง มันจะทายถูกบ่อยกว่าการสุ่มไหม")
 
-render_explanation(
-    "ลองทายเลขย้อนหลัง - สมมติว่าเราย้อนเวลากลับไป แล้วใช้ข้อมูลที่มีในตอนนั้นทายเลขงวดถัดไปดูว่าถูกกี่ครั้ง",
-    "Walk-Forward Validation คือการจำลองการใช้งานจริงแบบ Time-Series โดยใช้ข้อมูลย้อนหลัง (Window) มาเทรนโมเดลเพื่อ Predict งวดถัดไป แล้วขยับช่วงเวลาไปข้างหน้าทีละงวด",
-    r"Accuracy = \frac{1}{T} \sum_{t=1}^{T} \mathbb{1}(y_{t+1} \in \text{TopN}(\text{Model}(X_{t-W \dots t})))"
-)
+layman_wf = "ลอง 'ทายย้อนหลัง' - สมมติว่าเราย้อนเวลากลับไป แล้วลองเอาสูตรเด็ดไปทายเลขงวดถัดไปดูทีละงวดๆ เพื่อดูว่าถ้าใช้สูตรนี้มาตั้งแต่อดีต เราจะถูกหวยจริงๆ กี่ครั้ง"
+math_wf = "การทดสอบประสิทธิภาพตัวแบบด้วยวิธี Walk-Forward Validation (Time-series Backtesting) โดยการกำหนดหน้าต่างข้อมูลฝึกสอน (Sliding training window) เพื่อพยากรณ์ผลลัพธ์ในงวดถัดไป ($t+1$) และทำการทดสอบซ้ำอย่างต่อเนื่องตามลำดับเวลา"
+formula_wf = r"HitRate = \frac{1}{T} \sum_{t=W}^{T-1} \mathbb{1}(y_{t+1} \in \hat{\mathbf{y}}_{t+1} | \mathbf{X}_{t-W+1:t})"
+render_explanation(layman_wf, math_wf, formula_wf)
 
 with st.sidebar:
     st.header("ตั้งค่า Walk-Forward")

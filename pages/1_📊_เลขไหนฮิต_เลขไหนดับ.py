@@ -83,11 +83,10 @@ with col_cold:
 # --- Max Drawdown ---
 st.markdown("---")
 st.subheader("📉 Max Drawdown per Number")
-render_explanation(
-    "ช่วงจำศีลของเลข - ดูว่าเลขไหนเคยหายหน้าไปนานที่สุดกี่งวด",
-    "Max Drawdown (Maximum Gap) คำนวณจากระยะห่างที่มากที่สุดระหว่างการออกของเลขเดียวกันในชุดข้อมูลอนุกรมเวลา",
-    r"MaxGap(x) = \max_{i} (t_{x, i+1} - t_{x, i} - 1)"
-)
+layman_dd = "ช่วงเลข 'จำศีล' - ดูว่าเลขไหนเคยหายหน้าไปนานที่สุดกี่งวด ใครที่กำลังรอเลขตัวไหนอยู่ มาเช็กดูได้ว่ามันเคยทำสถิติหนีหายไปนานแค่ไหนก่อนจะโผล่มาอีกรอบ"
+math_dd = "การวิเคราะห์หาช่วงเวลาว่างเว้นสูงสุด (Maximum Inter-arrival Time) ของเหตุการณ์ใดเหตุการณ์หนึ่งในข้อมูลอนุกรมเวลา (Time-series data) เพื่อวัดค่าความแปรปรวนของกระบวนการสุ่มในเชิงเวลา"
+formula_dd = r"\text{MaxGap}(x) = \max_{i \in \{1 \dots k-1\}} (t_{x, i+1} - t_{x, i} - 1)"
+render_explanation(layman_dd, math_dd, formula_dd)
 
 dd_df = compute_max_drawdown_per_number(filtered)
 

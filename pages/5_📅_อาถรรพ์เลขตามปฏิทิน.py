@@ -39,11 +39,10 @@ st.markdown("เลขไหนชอบมาวันไหน? เดือ�
 
 monthly_freq, dow_counts, (chi2_m, p_m), (chi2_d, p_d), monthly_counts, top20 = get_seasonality_summary(df)
 
-render_explanation(
-    "การเช็กความแปลกแยก - ดูว่าข้อมูลที่เห็นมันต่างจากการสุ่มมั่วๆ จนผิดปกติไหม (ถ้า p-value น้อยกว่า 0.05 คือเริ่มมีเงื่อนงำ)",
-    "Chi-Squared Independence Test ใช้ทดสอบความสัมพันธ์ระหว่างตัวแปรเชิงคุณภาพสองตัว เพื่อดูว่ามีความแตกต่างจากผลลัพธ์ที่คาดหวังภายใต้สมมติฐานหลัก (Null Hypothesis) หรือไม่",
-    r"\chi^2 = \sum \frac{(O - E)^2}{E}"
-)
+layman_chi = "เช็กความ 'เฮี้ยน' ตามปฏิทิน - ดูว่าวันที่หรือเดือนมีผลกับเลขจริงๆ หรือเปล่า หรือว่าทั้งหมดมันก็แค่บังเอิญ (ถ้าค่า p-value น้อยกว่า 0.05 แสดงว่าเริ่มมีความแปลก ไม่ใช่สุ่มธรรมดา)"
+math_chi = r"การทดสอบความเป็นอิสระทางสถิติ (Statistical Independence Test) ด้วยตัวสถิติ Chi-Squared ($\chi^2$) เพื่อตรวจสอบว่าความแปรผันของผลรางวัลมีความสัมพันธ์เชิงประจักษ์กับตัวแปรเชิงกลุ่ม (Categorical variables) เช่น เดือน หรือ วันในสัปดาห์ หรือไม่"
+formula_chi = r"\chi^2 = \sum_{i=1}^{k} \frac{(O_i - E_i)^2}{E_i}"
+render_explanation(layman_chi, math_chi, formula_chi)
 
 tab1, tab2, tab3 = st.tabs(["📆 รายเดือน", "📅 Day of Week", "🔍 เจาะเลขเฉพาะ"])
 
