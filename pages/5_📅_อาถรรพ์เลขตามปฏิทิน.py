@@ -1,7 +1,7 @@
 import streamlit as st
 import plotly.graph_objects as go
 import pandas as pd
-from lotto.theme import inject_css, apply_layout, CRIMSON, GOLD, PANEL, TEXT, TEXT_DARK, PANEL_WHITE, init_persona, render_explanation
+from lotto.theme import inject_css, apply_layout, CRIMSON, GOLD, PANEL, PANEL_DARK, TEXT, TEXT_DARK, PANEL_WHITE, init_persona, render_explanation
 from lotto.data_loader import load_data
 from lotto.seasonality import (compute_monthly_frequency, compute_dow_distribution,
                                 chi_squared_monthly, chi_squared_dow,
@@ -44,7 +44,7 @@ math_chi = r"การทดสอบความเป็นอิสระท�
 formula_chi = r"\chi^2 = \sum_{i=1}^{k} \frac{(O_i - E_i)^2}{E_i}"
 render_explanation(layman_chi, math_chi, formula_chi)
 
-tab1, tab2, tab3 = st.tabs(["📆 รายเดือน", "📅 Day of Week", "🔍 เจาะเลขเฉพาะ"])
+tab1, tab2, tab3 = st.tabs(["📆 รายเดือน", "📅 รายวัน", "🔍 เจาะเลขเฉพาะ"])
 
 # --- Tab 1: Monthly ---
 with tab1:
@@ -72,12 +72,12 @@ with tab1:
     st.plotly_chart(fig_mc, width="stretch")
 
     # Monthly heatmap (month vs top numbers)
-    st.subheader("Heatmap: เดือน × เลข Last_2 (Top 20 เลขที่ออกบ่อย)")
+    st.subheader("Heatmap: เดือน × เลขท้าย 2 ตัว (Top 20 เลขที่ออกบ่อย)")
     heat_data = monthly_freq[top20]
     month_labels = [MONTH_NAMES[m] for m in heat_data.index]
     fig_mh = go.Figure(go.Heatmap(
         z=heat_data.values, x=top20, y=month_labels,
-        colorscale=[[0, "#FFFFFF"], [0.5, GOLD], [1.0, CRIMSON]],
+        colorscale=[[0, PANEL_DARK], [0.5, GOLD], [1.0, CRIMSON]],
         hovertemplate="เดือน: %{y}<br>เลข: %{x}<br>ครั้ง: %{z}<extra></extra>",
     ))
     fig_mh = apply_layout(fig_mh, title="ความถี่รายเดือนของ Top-20 เลข",
@@ -113,8 +113,8 @@ with tab3:
     if num_input.isdigit() and len(num_input) == 2:
         summary = get_monthly_number_summary(df, num_input.zfill(2))
         expected = len(df) / 100 / 12
-        st.caption(f"Expected ออก/เดือน (สุ่มสมบูรณ์): {expected:.1f} ครั้ง")
-        st.dataframe(summary, width="stretch", hide_index=True)
+        st.caption(f"คาดการณ์ความถี่ต่อเดือน (สุ่มสมบูรณ์): {expected:.1f} ครั้ง")
+        st.dataframe(summary.rename(columns={"Month": "เดือน", "Hits": "จำนวนที่ออก", "Rate_%": "อัตราส่วน (%)"}), width="stretch", hide_index=True)
 
         fig_ns = go.Figure(go.Bar(
             x=summary["Month"], y=summary["Rate_%"],

@@ -1,273 +1,180 @@
 import plotly.graph_objects as go
 import streamlit as st
 
-# Dark Luxury Palette
-CRIMSON   = "#C8102E"   # royal red
-GOLD      = "#D4AF37"   # metallic gold
-GOLD_DARK = "#A8892A"   # deep gold
-CHAMPAGNE = "#F0E8D5"   # warm off-white text
-BG_DARK   = "#07090D"   # near-black
-PANEL     = "#0F1420"   # card background
-PANEL_ALT = "#141C2E"   # slightly lighter panel
-BORDER    = "#D4AF3728" # gold border (subtle)
-TEXT      = "#F0E8D5"   # warm off-white
-TEXT_DIM  = "#7A7060"   # muted label text
+# --- Premium Luxury Palette ---
+GOLD_BRUSHED = "linear-gradient(135deg, #D4AF37 0%, #F1E5AC 50%, #A8892A 100%)"
+GOLD_SOLID   = "#D4AF37"
+DEEP_BLACK   = "#050505"
+MIDNIGHT     = "#0A0D15"
+SURFACE_CARD = "rgba(20, 28, 46, 0.6)"
+TEXT_CHAMPAGNE = "#F0E8D5"
+TEXT_MUTED    = "#8A817C"
+CRIMSON_ACCENT = "#9B111E" # Ruby Red
 
-# Aliases for backwards compatibility with existing pages
-TEXT_DARK   = TEXT
-PANEL_WHITE = PANEL
-GOLD_DIM    = GOLD_DARK
+# For backwards compatibility
+CRIMSON = CRIMSON_ACCENT
+GOLD = GOLD_SOLID
+GOLD_DARK = "#A8892A"
+PANEL = SURFACE_CARD
+PANEL_DARK = MIDNIGHT      # opaque dark hex for Plotly colorscales
+TEXT = TEXT_CHAMPAGNE
+TEXT_DARK = TEXT_CHAMPAGNE
+TEXT_DIM = TEXT_MUTED
+PANEL_WHITE = SURFACE_CARD
+PANEL_ALT = "#111926"
+GOLD_DIM = "#7A7060"
+CHAMPAGNE = TEXT_CHAMPAGNE
+BG_DARK = DEEP_BLACK
 
 PLOTLY_LAYOUT = dict(
     paper_bgcolor="rgba(0,0,0,0)",
-    plot_bgcolor="rgba(7,9,13,0.6)",
-    font=dict(color=TEXT, family="'Cinzel', 'Sarabun', sans-serif", size=13),
-    colorway=[CRIMSON, GOLD, "#E8A838", "#FF6B6B", "#4488CC"],
+    plot_bgcolor="rgba(5,5,5,0.4)",
+    font=dict(color=TEXT_CHAMPAGNE, family="'Playfair Display', 'Sarabun', serif", size=13),
+    colorway=[GOLD_SOLID, CRIMSON_ACCENT, "#E8A838", "#4488CC", "#6A4C93"],
     margin=dict(l=40, r=40, t=50, b=40),
-    hoverlabel=dict(bgcolor=PANEL_ALT, font_color=CHAMPAGNE, bordercolor=GOLD),
-    xaxis=dict(
-        gridcolor="rgba(255,255,255,0.03)",
-        linecolor="rgba(255,255,255,0.07)",
-        zerolinecolor="rgba(255,255,255,0.07)",
-    ),
-    yaxis=dict(
-        gridcolor="rgba(255,255,255,0.03)",
-        linecolor="rgba(255,255,255,0.07)",
-        zerolinecolor="rgba(255,255,255,0.07)",
-    ),
+    hoverlabel=dict(bgcolor="#141C2E", font_color="#F0E8D5", bordercolor=GOLD_SOLID),
+    xaxis=dict(gridcolor="rgba(255,255,255,0.05)", zerolinecolor="rgba(255,255,255,0.1)"),
+    yaxis=dict(gridcolor="rgba(255,255,255,0.05)", zerolinecolor="rgba(255,255,255,0.1)"),
 )
 
-CUSTOM_CSS = """
+CUSTOM_CSS = f"""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Sarabun:wght@300;400;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Prompt:wght@200;300;400;600&family=Sarabun:wght@300;400;600&display=swap');
 
     /* ── Base ── */
-    html, body, .stApp {
-        background-color: #07090D !important;
-        color: #F0E8D5 !important;
-        font-family: 'Sarabun', sans-serif !important;
-    }
-
-    /* ── Scrollbar ── */
-    ::-webkit-scrollbar { width: 6px; background: #0F1420; }
-    ::-webkit-scrollbar-thumb { background: #D4AF3744; border-radius: 3px; }
-
-    /* ── Sidebar ── */
-    [data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #0A0D15 0%, #07090D 100%) !important;
-        border-right: 1px solid #D4AF3720;
-    }
-    [data-testid="stSidebar"] * { color: #F0E8D5 !important; }
-    [data-testid="stSidebarNav"] a:hover { background: #D4AF3712 !important; }
+    html, body, .stApp {{
+        background: radial-gradient(circle at top right, #10141D 0%, {DEEP_BLACK} 100%) !important;
+        color: {TEXT_CHAMPAGNE} !important;
+        font-family: 'Prompt', sans-serif !important;
+    }}
 
     /* ── Headings ── */
-    h1, h2, h3 {
-        font-family: 'Cinzel', serif !important;
-        letter-spacing: 0.04em;
-    }
-    h1 {
-        background: linear-gradient(135deg, #D4AF37 0%, #F0E8D5 55%, #A8892A 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-    }
-    h2 { color: #D4AF37 !important; }
-    h3 { color: #C5A04A !important; font-size: 1.1rem !important; }
-
-    /* ── Gold divider ── */
-    hr {
-        border: none;
-        height: 1px;
-        background: linear-gradient(90deg, transparent 0%, #D4AF3766 50%, transparent 100%);
-        margin: 1.5rem 0;
-    }
-
-    /* ── Custom metric cards ── */
-    .metric-container {
-        background: linear-gradient(145deg, #0F1420 0%, #141C2E 100%);
-        border: 1px solid #D4AF3728;
-        border-top: 2px solid #D4AF37;
-        border-radius: 12px;
-        padding: 22px 16px;
-        text-align: center;
-        box-shadow: 0 4px 32px rgba(0,0,0,0.5), inset 0 1px 0 #D4AF3718;
-        transition: transform 0.25s ease, box-shadow 0.25s ease;
-        margin-bottom: 16px;
-    }
-    .metric-container:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 10px 40px rgba(212,175,55,0.18), inset 0 1px 0 #D4AF3728;
-    }
-    .metric-label {
-        color: #7A7060;
-        font-size: 0.75rem;
-        font-weight: 600;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        margin-bottom: 10px;
-    }
-    .metric-value {
-        background: linear-gradient(135deg, #D4AF37 0%, #F0E8D5 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        font-family: 'Cinzel', serif;
-        font-size: 2rem;
+    h1, h2, h3, h4 {{
+        font-family: 'Playfair Display', serif !important;
+        letter-spacing: -0.01em;
         font-weight: 700;
-        line-height: 1.2;
-    }
+    }}
+    h1 {{
+        background: {GOLD_BRUSHED};
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-size: 3.5rem !important;
+        padding-bottom: 1rem;
+        text-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    }}
+    h2 {{ color: {GOLD_SOLID} !important; border-bottom: 1px solid rgba(212, 175, 55, 0.2); padding-bottom: 0.5rem; }}
+    h3 {{ color: {TEXT_CHAMPAGNE} !important; font-weight: 400; font-style: italic; opacity: 0.9; }}
 
-    /* ── Native st.metric ── */
-    [data-testid="stMetric"] {
-        background: linear-gradient(145deg, #0F1420 0%, #141C2E 100%);
-        border: 1px solid #D4AF3728;
-        border-top: 2px solid #D4AF37;
-        border-radius: 12px;
-        padding: 16px 14px;
-        box-shadow: 0 4px 24px rgba(0,0,0,0.4);
-    }
-    [data-testid="stMetricLabel"] p {
-        color: #7A7060 !important;
-        font-size: 0.75rem !important;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-    }
-    [data-testid="stMetricValue"] {
-        color: #D4AF37 !important;
-        font-family: 'Cinzel', serif !important;
-    }
-    [data-testid="stMetricDelta"] { opacity: 0.8; }
-
-    /* ── Tabs ── */
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 4px;
-        background: transparent;
-        border-bottom: 1px solid #D4AF3728;
-    }
-    .stTabs [data-baseweb="tab"] {
-        background: transparent;
-        color: #7A7060 !important;
-        border-radius: 8px 8px 0 0;
+    /* ── Sidebar ── */
+    [data-testid="stSidebar"] {{
+        background: {DEEP_BLACK} !important;
+        border-right: 1px solid rgba(212, 175, 55, 0.15);
+        box-shadow: 10px 0 30px rgba(0,0,0,0.5);
+    }}
+    [data-testid="stSidebarNav"] a {{
+        font-family: 'Prompt', sans-serif;
+        font-size: 1.05rem;
         padding: 10px 20px;
-        font-family: 'Sarabun', sans-serif;
-    }
-    .stTabs [aria-selected="true"] {
-        background: #D4AF3710 !important;
-        color: #D4AF37 !important;
-        border-bottom: 2px solid #D4AF37 !important;
-    }
+        transition: all 0.3s ease;
+    }}
+    [data-testid="stSidebarNav"] a:hover {{
+        background: rgba(212, 175, 55, 0.1) !important;
+        border-left: 3px solid {GOLD_SOLID};
+    }}
 
-    /* ── Tags ── */
-    .hot-tag {
-        display: inline-block;
-        background: #C8102E15;
-        border-left: 3px solid #C8102E;
-        color: #FF6B7A;
-        padding: 6px 14px;
-        margin: 4px 0;
-        border-radius: 0 6px 6px 0;
+    /* ── Luxury Metric Cards ── */
+    .metric-container {{
+        background: {SURFACE_CARD};
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(212, 175, 55, 0.15);
+        border-radius: 4px; /* Sharper, more modern luxury */
+        padding: 24px 20px;
+        text-align: center;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.05);
+        transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s ease;
+    }}
+    .metric-container:hover {{
+        transform: translateY(-8px);
+        border-color: rgba(212, 175, 55, 0.5);
+        box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 0 15px rgba(212, 175, 55, 0.1);
+    }}
+    .metric-label {{
+        color: {TEXT_MUTED};
+        font-family: 'Prompt', sans-serif;
+        font-size: 0.7rem;
         font-weight: 600;
-        width: 100%;
-        font-size: 0.95rem;
-    }
-    .cold-tag {
-        display: inline-block;
-        background: #0D1E30;
-        border-left: 3px solid #4488CC;
-        color: #88BBDD;
-        padding: 6px 14px;
-        margin: 4px 0;
-        border-radius: 0 6px 6px 0;
-        font-weight: 600;
-        width: 100%;
-        font-size: 0.95rem;
-    }
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        margin-bottom: 12px;
+    }}
+    .metric-value {{
+        font-family: 'Playfair Display', serif;
+        font-size: 2.4rem;
+        font-weight: 700;
+        color: {GOLD_SOLID};
+        background: {GOLD_BRUSHED};
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }}
 
-    /* ── Disclaimer ── */
-    .disclaimer {
-        background: linear-gradient(135deg, #C8102E10 0%, transparent 100%);
-        border: 1px solid #C8102E33;
-        border-left: 3px solid #C8102E;
-        padding: 14px 18px;
-        border-radius: 8px;
-        color: #7A7060;
-        font-size: 0.85rem;
-        margin: 16px 0;
-        line-height: 1.6;
-    }
+    /* ── Glass Components ── */
+    .stTabs [data-baseweb="tab-list"] {{
+        background: transparent;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+    }}
+    .stTabs [data-baseweb="tab"] {{
+        font-family: 'Prompt', sans-serif;
+        color: {TEXT_MUTED} !important;
+    }}
+    .stTabs [aria-selected="true"] {{
+        color: {GOLD_SOLID} !important;
+        border-bottom-color: {GOLD_SOLID} !important;
+    }}
 
     /* ── Buttons ── */
-    .stButton > button {
-        background: linear-gradient(135deg, #C8102E 0%, #8B0015 100%) !important;
-        color: #F0E8D5 !important;
-        border: 1px solid #C8102E60 !important;
-        border-radius: 8px !important;
-        font-family: 'Sarabun', sans-serif !important;
-        font-weight: 600 !important;
-        letter-spacing: 0.03em !important;
-        transition: all 0.2s ease !important;
-        padding: 0.5rem 1.5rem !important;
-    }
-    .stButton > button:hover {
-        background: linear-gradient(135deg, #E01030 0%, #C8102E 100%) !important;
-        box-shadow: 0 4px 24px #C8102E44 !important;
-        transform: translateY(-1px) !important;
-    }
-    .stButton > button[kind="primary"] {
-        background: linear-gradient(135deg, #D4AF37 0%, #A8892A 100%) !important;
-        color: #07090D !important;
-        border: none !important;
-        font-weight: 700 !important;
-    }
-    .stButton > button[kind="primary"]:hover {
-        box-shadow: 0 4px 24px #D4AF3744 !important;
-    }
+    .stButton > button {{
+        background: transparent !important;
+        color: {GOLD_SOLID} !important;
+        border: 1px solid {GOLD_SOLID} !important;
+        border-radius: 2px !important;
+        font-family: 'Prompt', sans-serif !important;
+        font-weight: 400 !important;
+        letter-spacing: 0.1em !important;
+        text-transform: uppercase !important;
+        transition: all 0.3s ease !important;
+        padding: 0.6rem 2rem !important;
+    }}
+    .stButton > button:hover {{
+        background: {GOLD_SOLID} !important;
+        color: {DEEP_BLACK} !important;
+        box-shadow: 0 0 20px rgba(212, 175, 55, 0.3) !important;
+    }}
 
-    /* ── Inputs ── */
-    [data-testid="stTextInput"] input,
-    [data-testid="stNumberInput"] input {
-        background: #0F1420 !important;
-        color: #F0E8D5 !important;
-        border: 1px solid #D4AF3730 !important;
-        border-radius: 8px !important;
-    }
-    [data-testid="stSelectbox"] > div > div {
-        background: #0F1420 !important;
-        color: #F0E8D5 !important;
-        border: 1px solid #D4AF3730 !important;
-        border-radius: 8px !important;
-    }
+    /* ── Dataframe & Inputs ── */
+    [data-testid="stDataFrame"] {{
+        background: rgba(255,255,255,0.02);
+        border: 1px solid rgba(255,255,255,0.05);
+    }}
+    [data-testid="stTextInput"] input, [data-testid="stSelectbox"] > div > div {{
+        background: rgba(255,255,255,0.03) !important;
+        border: 1px solid rgba(255,255,255,0.1) !important;
+        border-radius: 2px !important;
+    }}
 
-    /* ── Dataframe ── */
-    [data-testid="stDataFrame"] {
-        border: 1px solid #D4AF3722;
-        border-radius: 10px;
-        overflow: visible;
-    }
-
-    /* ── Info / Warning / Error boxes ── */
-    [data-testid="stAlert"] {
-        background: #0F1420;
-        border-radius: 8px;
-    }
-
-    /* ── Mobile ── */
-    @media (max-width: 768px) {
-        h1 { font-size: 1.5rem !important; }
-        .metric-value { font-size: 1.5rem !important; }
-        [data-testid="stHorizontalBlock"] { flex-wrap: wrap !important; overflow: visible !important; }
-        [data-testid="stHorizontalBlock"] > div {
-            min-width: min(100%, 18rem) !important;
-            flex: 1 1 min(100%, 18rem) !important;
-        }
-    }
+    /* ── Technical Info Block ── */
+    .tech-block {{
+        border-left: 2px solid {GOLD_SOLID};
+        background: linear-gradient(90deg, rgba(212, 175, 55, 0.05) 0%, transparent 100%);
+        padding: 15px 25px;
+        margin: 20px 0;
+    }}
 </style>
 """
 
-
 def inject_css() -> None:
     st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
-
 
 def render_metric(label: str, value: str) -> None:
     st.markdown(
@@ -280,20 +187,10 @@ def render_metric(label: str, value: str) -> None:
         unsafe_allow_html=True,
     )
 
-
 def apply_layout(fig: go.Figure, **overrides) -> go.Figure:
     layout = {**PLOTLY_LAYOUT, **overrides}
     fig.update_layout(**layout)
     return fig
-
-
-def gold_line_style() -> dict:
-    return dict(color=GOLD, width=2)
-
-
-def crimson_bar_style() -> dict:
-    return dict(color=CRIMSON)
-
 
 def init_persona() -> str:
     if "persona" not in st.session_state:
@@ -301,28 +198,32 @@ def init_persona() -> str:
     
     with st.sidebar:
         st.markdown("---")
-        st.markdown("### 🎭 เลือกโหมดการอธิบาย")
+        st.markdown("<h3 style='text-align:center; font-style:normal; font-size:1rem; letter-spacing:0.1em; color:#8A817C;'>MODE SELECTOR</h3>", unsafe_allow_html=True)
         st.session_state.persona = st.radio(
-            "ระดับเนื้อหา:",
+            "Content Depth:",
             ["ภาษาชาวบ้าน", "วิชาการ / คณิตศาสตร์"],
             index=0 if st.session_state.persona == "ภาษาชาวบ้าน" else 1,
-            help="ภาษาชาวบ้าน: เน้นเข้าใจง่าย คุยแบบคอหวย | วิชาการ: เน้นนิยาม ทฤษฎี และสมการ"
+            label_visibility="collapsed"
         )
         st.markdown("---")
     return st.session_state.persona
 
-
 def render_explanation(layman: str, math: str, formula: str = None) -> None:
     persona = st.session_state.get("persona", "ภาษาชาวบ้าน")
     if persona == "วิชาการ / คณิตศาสตร์":
-        with st.container():
-            st.markdown(f"""
-            <div style="border-left: 3px solid {GOLD}; padding-left: 15px; margin: 10px 0;">
-                <b style="color:{GOLD};">🔬 คำอธิบายเชิงวิชาการ (Technical Definition):</b><br>
-                <i style="color:{TEXT_DIM}; font-size: 0.9rem;">{math}</i>
-            </div>
-            """, unsafe_allow_html=True)
-            if formula:
-                st.latex(formula)
+        st.markdown(f"""
+        <div class="tech-block">
+            <b style="color:{GOLD_SOLID}; font-family:'Playfair Display', serif; letter-spacing:0.05em;">TECHNICAL SPECIFICATION</b><br>
+            <i style="color:{TEXT_CHAMPAGNE}; font-size: 0.95rem; line-height:1.6;">{math}</i>
+        </div>
+        """, unsafe_allow_html=True)
+        if formula:
+            st.latex(formula)
     else:
-        st.markdown(f"**💡 อธิบายแบบเข้าใจง่าย:** {layman}")
+        st.markdown(f"<div style='padding:10px 0; border-top:1px solid rgba(255,255,255,0.05); border-bottom:1px solid rgba(255,255,255,0.05); font-style:italic; color:{TEXT_CHAMPAGNE}; opacity:0.8;'>“ {layman} ”</div>", unsafe_allow_html=True)
+
+def gold_line_style() -> dict:
+    return dict(color=GOLD_SOLID, width=1.5)
+
+def crimson_bar_style() -> dict:
+    return dict(color=CRIMSON_ACCENT)
