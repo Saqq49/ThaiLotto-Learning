@@ -235,9 +235,44 @@ The environment is now functional again in the current Codex shell on `x86_64` (
 - [x] Pushed to GitHub `main` in commit `4232d73`.
 - [x] Verification: 27/27 tests passed.
 
+### Session 18: Premium Luxury UI & Refined Dual-Mode by Gemini (2026-05-05)
+
+- [x] **UX/UI Overhaul to "Premium Luxury":**
+    - Redesigned `lotto/theme.py` with a sophisticated minimalist aesthetic.
+    - **Typography:** Switched to high-end font pairings: **Playfair Display** (Serif) for headings and **Prompt** (Modern Thai) for body UI.
+    - **Visual Depth:** Implemented **Radial Gradients** (Midnight to Pure Black) and **Glassmorphism** (backdrop blur) for cards.
+    - **Accents:** Used **Brushed Gold** metallic effects and refined transitions for a "High-end Financial Terminal" feel.
+- [x] **Strict Dual-Mode Refinement:**
+    - Ensured absolute separation between layman and academic modes.
+    - **"ภาษาชาวบ้าน":** Uses purely informal, metaphorical lottery-centric language (e.g., "เช็กความเนียนของโพย", "เลขจำศีล").
+    - **"วิชาการ / คณิตศาสตร์":** Uses rigorous academic definitions (e.g., "Laplace Smoothing", "Exponential Decay") with LaTeX formulas.
+    - Redesigned the Technical Specification block to look like formal documentation.
+- [x] **Global Integration:** Systematically updated `app.py` and all 6 sub-pages to conform to the new design language.
+- [x] **Full Localization:** Replaced all technical column names and metrics with formal Thai terminology (e.g., `Prize_1` → `รางวัลที่ 1`, `Last_2` → `เลขท้าย 2 ตัว`, `Accuracy` → `ความแม่นยำ`).
+- [x] Verification: `py_compile` OK, visual consistency verified across primary components.
+
+### Session 19: Top-Right Mode Selector by Codex (2026-05-05)
+
+- [x] Read Gemini's Session 18 notes before continuing.
+- [x] Moved the dual-mode selector out of the left sidebar.
+- [x] Reworked `init_persona()` in `lotto/theme.py` to render a top-right horizontal segmented selector:
+  - `ภาษาชาวบ้าน`
+  - `วิชาการ / คณิตศาสตร์`
+- [x] Styled the selector as a standalone luxury tab/pill control with glassmorphism, brushed-gold selected state, hover lift, and responsive mobile wrapping.
+- [x] Added CSS animations:
+  - selector entrance animation at the top-right area.
+  - active tab hover/selection transition.
+  - explanation panel fade/slide transition when mode changes and Streamlit reruns.
+- [x] Kept the existing `init_persona()` API so all pages that already call it get the new placement automatically.
+- [x] Note: unrelated local Gemini/page edits still exist in the working tree and were not bundled into this selector change.
+- [x] Verification:
+  - `py_compile`: passed
+  - tests: **27/27 passed** after repairing the current Codex `.venv` x86_64 binary packages
+  - AppTest smoke test: `app.py` and all 7 local pages passed
+
 ## Current Blockers
 
-None. All 7 uncommitted Gemini files are now live on GitHub and Streamlit Cloud will auto-redeploy.
+None for the selector change. Some unrelated local page/content edits remain unstaged in the working tree and should be reviewed separately before deployment.
 
 ## Initial Codex Review Findings
 ... (unchanged)
@@ -285,3 +320,4 @@ None. All 7 uncommitted Gemini files are now live on GitHub and Streamlit Cloud 
 | 2026-05-05 | Runtime Display Fix | Completed and pushed, 27/27 tests pass, AppTest all pages pass | Streamlit Cloud redeploy |
 | 2026-05-05 | Data Loading Fallback | Completed and pushed, 27/27 tests pass, AppTest all pages pass | Wait for Streamlit Cloud redeploy |
 | 2026-05-04 | Persona Switcher Polish | Completed and pushed, 27/27 tests pass | Streamlit Cloud auto-redeploys |
+| 2026-05-05 | Top-Right Mode Selector | Completed locally, 27/27 tests pass, AppTest all pages pass | Commit/push selector change |

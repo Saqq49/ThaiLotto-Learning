@@ -120,6 +120,113 @@ CUSTOM_CSS = f"""
     }}
 
     /* ── Glass Components ── */
+    .mode-topbar {{
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        margin: 0.35rem 0 0.75rem;
+        animation: modeBarIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }}
+    .mode-title {{
+        width: 100%;
+        text-align: right;
+        color: {TEXT_MUTED};
+        font-family: 'Prompt', sans-serif;
+        font-size: 0.62rem;
+        font-weight: 600;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+        margin-bottom: 0.25rem;
+    }}
+    [data-testid="stRadio"] {{
+        display: flex;
+        justify-content: flex-end;
+        animation: modeSwitchPulse 0.36s ease both;
+    }}
+    [data-testid="stRadio"] > label {{
+        display: none;
+    }}
+    [data-testid="stRadio"] div[role="radiogroup"] {{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.25rem;
+        width: min(100%, 22rem);
+        min-height: 2.45rem;
+        padding: 0.25rem;
+        border: 1px solid rgba(212, 175, 55, 0.24);
+        border-radius: 999px;
+        background:
+            linear-gradient(135deg, rgba(255,255,255,0.07), rgba(255,255,255,0.01)),
+            rgba(5, 5, 5, 0.74);
+        box-shadow: 0 12px 32px rgba(0,0,0,0.42), inset 0 1px 0 rgba(255,255,255,0.08);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+    }}
+    [data-testid="stRadio"] div[role="radiogroup"] label {{
+        min-height: 1.9rem;
+        margin: 0 !important;
+        padding: 0.34rem 0.68rem !important;
+        border-radius: 999px;
+        color: {TEXT_MUTED} !important;
+        font-family: 'Prompt', sans-serif !important;
+        font-size: 0.78rem !important;
+        font-weight: 400 !important;
+        text-align: center;
+        justify-content: center;
+        transition:
+            background 0.34s cubic-bezier(0.16, 1, 0.3, 1),
+            color 0.34s ease,
+            box-shadow 0.34s ease,
+            transform 0.34s ease;
+    }}
+    [data-testid="stRadio"] div[role="radiogroup"] label:hover {{
+        color: {TEXT_CHAMPAGNE} !important;
+        background: rgba(212, 175, 55, 0.08);
+        transform: translateY(-1px);
+    }}
+    [data-testid="stRadio"] div[role="radiogroup"] label:has(input:checked) {{
+        color: {DEEP_BLACK} !important;
+        background: {GOLD_BRUSHED};
+        box-shadow: 0 8px 22px rgba(212, 175, 55, 0.24), inset 0 1px 0 rgba(255,255,255,0.28);
+        transform: translateY(-1px);
+    }}
+    [data-testid="stRadio"] div[role="radiogroup"] label:has(input:checked) p {{
+        color: {DEEP_BLACK} !important;
+        font-weight: 600 !important;
+    }}
+    [data-testid="stRadio"] div[role="radiogroup"] p {{
+        font-size: inherit !important;
+        line-height: 1.15 !important;
+        white-space: nowrap;
+    }}
+    [data-testid="stRadio"] div[role="radiogroup"] svg {{
+        display: none !important;
+    }}
+    .explanation-panel {{
+        animation: explanationSwap 0.46s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }}
+    .layman-panel {{
+        padding: 12px 0;
+        border-top: 1px solid rgba(255,255,255,0.05);
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        font-style: italic;
+        color: {TEXT_CHAMPAGNE};
+        opacity: 0.86;
+    }}
+    @keyframes modeBarIn {{
+        from {{ opacity: 0; transform: translateY(-10px) scale(0.98); }}
+        to {{ opacity: 1; transform: translateY(0) scale(1); }}
+    }}
+    @keyframes modeSwitchPulse {{
+        from {{ opacity: 0; transform: translateY(-4px); filter: blur(2px); }}
+        to {{ opacity: 1; transform: translateY(0); filter: blur(0); }}
+    }}
+    @keyframes explanationSwap {{
+        from {{ opacity: 0; transform: translateY(8px); filter: blur(2px); }}
+        to {{ opacity: 1; transform: translateY(0); filter: blur(0); }}
+    }}
+
     .stTabs [data-baseweb="tab-list"] {{
         background: transparent;
         border-bottom: 1px solid rgba(255,255,255,0.05);
@@ -170,6 +277,27 @@ CUSTOM_CSS = f"""
         padding: 15px 25px;
         margin: 20px 0;
     }}
+
+    @media (max-width: 768px) {{
+        .mode-topbar {{
+            margin-top: 0.1rem;
+        }}
+        .mode-title {{
+            text-align: left;
+        }}
+        [data-testid="stRadio"] {{
+            justify-content: stretch;
+        }}
+        [data-testid="stRadio"] div[role="radiogroup"] {{
+            width: 100%;
+        }}
+        [data-testid="stRadio"] div[role="radiogroup"] label {{
+            padding-inline: 0.45rem !important;
+        }}
+        [data-testid="stRadio"] div[role="radiogroup"] p {{
+            white-space: normal;
+        }}
+    }}
 </style>
 """
 
@@ -195,24 +323,26 @@ def apply_layout(fig: go.Figure, **overrides) -> go.Figure:
 def init_persona() -> str:
     if "persona" not in st.session_state:
         st.session_state.persona = "ภาษาชาวบ้าน"
-    
-    with st.sidebar:
-        st.markdown("---")
-        st.markdown("<h3 style='text-align:center; font-style:normal; font-size:1rem; letter-spacing:0.1em; color:#8A817C;'>MODE SELECTOR</h3>", unsafe_allow_html=True)
-        st.session_state.persona = st.radio(
-            "Content Depth:",
+
+    st.markdown('<div class="mode-topbar">', unsafe_allow_html=True)
+    _, mode_col = st.columns([1, 0.46])
+    with mode_col:
+        st.markdown('<div class="mode-title">MODE SELECTOR</div>', unsafe_allow_html=True)
+        st.radio(
+            "Content Depth",
             ["ภาษาชาวบ้าน", "วิชาการ / คณิตศาสตร์"],
-            index=0 if st.session_state.persona == "ภาษาชาวบ้าน" else 1,
-            label_visibility="collapsed"
+            key="persona",
+            horizontal=True,
+            label_visibility="collapsed",
         )
-        st.markdown("---")
+    st.markdown("</div>", unsafe_allow_html=True)
     return st.session_state.persona
 
 def render_explanation(layman: str, math: str, formula: str = None) -> None:
     persona = st.session_state.get("persona", "ภาษาชาวบ้าน")
     if persona == "วิชาการ / คณิตศาสตร์":
         st.markdown(f"""
-        <div class="tech-block">
+        <div class="tech-block explanation-panel">
             <b style="color:{GOLD_SOLID}; font-family:'Playfair Display', serif; letter-spacing:0.05em;">TECHNICAL SPECIFICATION</b><br>
             <i style="color:{TEXT_CHAMPAGNE}; font-size: 0.95rem; line-height:1.6;">{math}</i>
         </div>
@@ -220,7 +350,7 @@ def render_explanation(layman: str, math: str, formula: str = None) -> None:
         if formula:
             st.latex(formula)
     else:
-        st.markdown(f"<div style='padding:10px 0; border-top:1px solid rgba(255,255,255,0.05); border-bottom:1px solid rgba(255,255,255,0.05); font-style:italic; color:{TEXT_CHAMPAGNE}; opacity:0.8;'>“ {layman} ”</div>", unsafe_allow_html=True)
+        st.markdown(f'<div class="layman-panel explanation-panel">“ {layman} ”</div>', unsafe_allow_html=True)
 
 def gold_line_style() -> dict:
     return dict(color=GOLD_SOLID, width=1.5)
