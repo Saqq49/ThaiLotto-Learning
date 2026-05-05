@@ -220,9 +220,24 @@ The environment is now functional again in the current Codex shell on `x86_64` (
   - data quality script: passed
   - AppTest: `pages/0_📋_Data_Overview.py` passed after Arrow warning fix
 
+### Session 17: Persona Switcher & Explanation Polish by Claude (2026-05-04)
+
+- [x] Committed Gemini's uncommitted persona/UI improvements (7 files) that Session 16 noted were left behind.
+- [x] Fixed SyntaxWarning in `pages/5_📅_อาถรรพ์เลขตามปฏิทิน.py` — `\c` escape in plain string → raw string.
+- [x] Changes included:
+  - `lotto/theme.py`: persona labels → "ภาษาชาวบ้าน" / "วิชาการ / คณิตศาสตร์", `render_explanation` academic view styled with gold-border container
+  - `pages/0_📋_ส่องโพยสถิติ.py`: integrity score explanation more colloquial
+  - `pages/1_📊_เลขไหนฮิต_เลขไหนดับ.py`: max drawdown explanation with "เลข 'จำศีล'" metaphor
+  - `pages/2_🔮_สำนักคำนวณเลขเด็ด.py`: all 4 predictors renamed (Freq="เลขขยัน", Overdue="เลขตาม", Recency="เลขกระแส", Random="วัดดวง")
+  - `pages/3_🎯_AI_จะแม่นจริงไหม.py`: walk-forward as "ทายย้อนหลัง" + ROI explanation
+  - `pages/4_💰_ลองแทงทิพย์_รวยหรือเจ๊ง.py`: ROI formula added
+  - `pages/5_📅_อาถรรพ์เลขตามปฏิทิน.py`: chi-squared as "เช็กความเฮี้ยนตามปฏิทิน"
+- [x] Pushed to GitHub `main` in commit `4232d73`.
+- [x] Verification: 27/27 tests passed.
+
 ## Current Blockers
 
-None for the data pipeline after Session 16. Dashboard is deployed, the Plotly runtime/display issue has been fixed, and data loading now has a CSV fallback for deploy runtimes where parquet/pyarrow read fails.
+None. All 7 uncommitted Gemini files are now live on GitHub and Streamlit Cloud will auto-redeploy.
 
 ## Initial Codex Review Findings
 ... (unchanged)
@@ -269,3 +284,4 @@ None for the data pipeline after Session 16. Dashboard is deployed, the Plotly r
 | 2026-05-04 | Dark Luxury Deploy | Completed, deployed to Streamlit Cloud | Post-deploy QA |
 | 2026-05-05 | Runtime Display Fix | Completed and pushed, 27/27 tests pass, AppTest all pages pass | Streamlit Cloud redeploy |
 | 2026-05-05 | Data Loading Fallback | Completed and pushed, 27/27 tests pass, AppTest all pages pass | Wait for Streamlit Cloud redeploy |
+| 2026-05-04 | Persona Switcher Polish | Completed and pushed, 27/27 tests pass | Streamlit Cloud auto-redeploys |
