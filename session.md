@@ -18,7 +18,7 @@ The environment is now functional again in the current Codex shell on `x86_64` (
 - `lotto/backtest.py` has been updated to use official payout rules (2,000 THB for Last_2) and support multi-number strategies.
 - The dataset now includes manual updates for 2025 and 2026 (total 461 draws).
 - Current deployed URL: `https://thailotto-learning-w3xpaw8apwaungtaktzkxd.streamlit.app/`
-- Latest fix waiting to be pushed/redeployed if not already done: Plotly theme `gridcolor`/`linecolor` changed from 8-digit hex alpha values to `rgba(...)`, because Plotly rejects values like `#FFFFFF08` at runtime.
+- Latest fix pushed to `main` in commit `7399161`: Plotly theme `gridcolor`/`linecolor` changed from 8-digit hex alpha values to `rgba(...)`, because Plotly rejects values like `#FFFFFF08` at runtime.
 
 ## Completed Work
 
@@ -196,7 +196,7 @@ The environment is now functional again in the current Codex shell on `x86_64` (
 
 ## Current Blockers
 
-None. Dashboard is polished, deployed, and the latest runtime/display issue has been fixed locally. Push the Session 15 commit to trigger Streamlit Cloud redeploy if it has not already been pushed.
+None. Dashboard is polished, deployed, and the latest runtime/display issue has been fixed and pushed to `main` to trigger Streamlit Cloud redeploy.
 
 ## Initial Codex Review Findings
 ... (unchanged)
@@ -241,4 +241,4 @@ None. Dashboard is polished, deployed, and the latest runtime/display issue has 
 | 2026-05-04 | Visual Polish | Completed, 27/27 tests pass | Final Deployment |
 | 2026-05-04 | Final UI Review | Completed, 27/27 tests pass | Streamlit Community Cloud deploy |
 | 2026-05-04 | Dark Luxury Deploy | Completed, deployed to Streamlit Cloud | Post-deploy QA |
-| 2026-05-05 | Runtime Display Fix | Completed locally, 27/27 tests pass, AppTest all pages pass | Push/redeploy |
+| 2026-05-05 | Runtime Display Fix | Completed and pushed, 27/27 tests pass, AppTest all pages pass | Streamlit Cloud redeploy |
