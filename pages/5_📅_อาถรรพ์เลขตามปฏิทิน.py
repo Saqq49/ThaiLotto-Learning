@@ -1,7 +1,7 @@
 import streamlit as st
 import plotly.graph_objects as go
 import pandas as pd
-from lotto.theme import inject_css, apply_layout, CRIMSON, GOLD, PANEL, TEXT, TEXT_DARK, PANEL_WHITE
+from lotto.theme import inject_css, apply_layout, CRIMSON, GOLD, PANEL, TEXT, TEXT_DARK, PANEL_WHITE, init_persona, render_explanation
 from lotto.data_loader import load_data
 from lotto.seasonality import (compute_monthly_frequency, compute_dow_distribution,
                                 chi_squared_monthly, chi_squared_dow,
@@ -9,6 +9,7 @@ from lotto.seasonality import (compute_monthly_frequency, compute_dow_distributi
 
 st.set_page_config(page_title="อาถรรพ์เลขตามปฏิทิน", page_icon="📅", layout="wide")
 inject_css()
+init_persona()
 
 df = st.session_state["df"] if "df" in st.session_state else load_data()
 if df.empty:
@@ -37,6 +38,12 @@ st.title("📅 อาถรรพ์เลขตามปฏิทิน")
 st.markdown("เลขไหนชอบมาวันไหน? เดือนไหนมีเลขอะไรพิเศษ? — มาพิสูจน์ความเชื่อด้วยสถิติกัน")
 
 monthly_freq, dow_counts, (chi2_m, p_m), (chi2_d, p_d), monthly_counts, top20 = get_seasonality_summary(df)
+
+render_explanation(
+    "การเช็กความแปลกแยก - ดูว่าข้อมูลที่เห็นมันต่างจากการสุ่มมั่วๆ จนผิดปกติไหม (ถ้า p-value น้อยกว่า 0.05 คือเริ่มมีเงื่อนงำ)",
+    "Chi-Squared Independence Test ใช้ทดสอบความสัมพันธ์ระหว่างตัวแปรเชิงคุณภาพสองตัว เพื่อดูว่ามีความแตกต่างจากผลลัพธ์ที่คาดหวังภายใต้สมมติฐานหลัก (Null Hypothesis) หรือไม่",
+    r"\chi^2 = \sum \frac{(O - E)^2}{E}"
+)
 
 tab1, tab2, tab3 = st.tabs(["📆 รายเดือน", "📅 Day of Week", "🔍 เจาะเลขเฉพาะ"])
 

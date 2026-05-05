@@ -1,12 +1,13 @@
 import streamlit as st
 import plotly.graph_objects as go
 import pandas as pd
-from lotto.theme import inject_css, apply_layout, CRIMSON, GOLD, PANEL_WHITE, TEXT_DARK
+from lotto.theme import inject_css, apply_layout, CRIMSON, GOLD, PANEL_WHITE, TEXT_DARK, init_persona, render_explanation
 from lotto.data_loader import load_data
 from lotto.backtest import run_backtest, PRIZE_PAYOUTS, TICKET_PRICE
 
 st.set_page_config(page_title="ลองแทงทิพย์: รวยหรือเจ๊ง?", page_icon="💰", layout="wide")
 inject_css()
+init_persona()
 
 df = st.session_state["df"] if "df" in st.session_state else load_data()
 if df.empty:

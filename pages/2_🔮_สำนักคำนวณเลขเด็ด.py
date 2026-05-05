@@ -1,11 +1,12 @@
 import streamlit as st
 import plotly.graph_objects as go
-from lotto.theme import inject_css, apply_layout, GOLD, CRIMSON, PANEL_WHITE, TEXT_DARK
+from lotto.theme import inject_css, apply_layout, GOLD, CRIMSON, PANEL_WHITE, TEXT_DARK, init_persona, render_explanation
 from lotto.data_loader import load_data
 from lotto.predictors import frequency_predictor, overdue_predictor, recency_weighted_predictor, random_predictor
 
 st.set_page_config(page_title="สำนักคำนวณเลขเด็ด", page_icon="🔮", layout="wide")
 inject_css()
+init_persona()
 
 df = st.session_state["df"] if "df" in st.session_state else load_data()
 if df.empty:
@@ -25,19 +26,27 @@ train_df = df.tail(window)
 
 if method == "Frequency":
     predictions = frequency_predictor(train_df, top_n=top_n)
-    method_desc = "เลือกเลขที่ออกบ่อยที่สุดในช่วงเวลาที่เลือก"
+    layman = "เลือกเลขที่ออกบ่อยที่สุดในช่วงเวลาที่เลือก"
+    math = "คำนวณความน่าจะเป็นแบบ Laplace Smoothing เพื่อป้องกันปัญหาเลขที่ไม่เคยออกเลยมีความน่าจะเป็นเป็นศูนย์"
+    formula = r"P(x) = \frac{count(x) + 1}{\sum_{i=0}^{99} (count(i) + 1)}"
 elif method == "Overdue":
     predictions = overdue_predictor(train_df, top_n=top_n)
-    method_desc = "เลือกเลขที่ห่างจากการออกครั้งล่าสุดมากที่สุด"
+    layman = "เลือกเลขที่ห่างจากการออกครั้งล่าสุดมากที่สุด (เลขที่หายหน้าไปนานที่สุด)"
+    math = "วัดระยะห่าง (Gap) ระหว่างงวดปัจจุบันกับงวดล่าสุดที่เลขนั้นออก แล้วทำการ Normalize ให้ค่าอยู่ระหว่าง 0 ถึง 1"
+    formula = r"Score(x) = \frac{T - last\_seen(x)}{\max_{i} (T - last\_seen(i))}"
 elif method == "Recency-Weighted":
     predictions = recency_weighted_predictor(train_df, top_n=top_n)
-    method_desc = "ให้น้ำหนักมากขึ้นกับงวดล่าสุด (decay = 0.95)"
+    layman = "ให้น้ำหนักมากขึ้นกับงวดล่าสุด เลขที่เพิ่งออกไปจะเด่นกว่าเลขที่ออกนานแล้ว"
+    math = "ใช้ Exponential Decay Weighting โดยให้ค่าน้ำหนักลดลงตามลำดับงวดที่ย้อนกลับไป"
+    formula = r"Score(x) = \sum_{t=1}^{T} \mathbb{1}(draw_t = x) \cdot \alpha^{T-t}"
 else:
     predictions = random_predictor(top_n=top_n)
-    method_desc = "สุ่มเลขแบบ uniform (Baseline)"
+    layman = "สุ่มเลขแบบเท่าเทียมกันทุกเลข เพื่อใช้เป็นเกณฑ์มาตรฐาน (Baseline)"
+    math = "ใช้ Discrete Uniform Distribution โดยที่ทุกเลขมีความน่าจะเป็นเท่ากับ 1/100"
+    formula = r"P(X=x) = \frac{1}{100}, \forall x \in \{00, 01, ..., 99\}"
 
 st.subheader(f"เลขที่วิธีนี้จัดอันดับสูง ({method})")
-st.caption(f"📌 {method_desc} | ใช้ข้อมูล {window} งวดล่าสุด")
+render_explanation(layman, math, formula)
 st.markdown("---")
 
 cols = st.columns(top_n)

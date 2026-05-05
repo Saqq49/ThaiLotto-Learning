@@ -293,3 +293,30 @@ def gold_line_style() -> dict:
 
 def crimson_bar_style() -> dict:
     return dict(color=CRIMSON)
+
+
+def init_persona() -> str:
+    if "persona" not in st.session_state:
+        st.session_state.persona = "คนทั่วไป"
+    
+    with st.sidebar:
+        st.markdown("---")
+        st.markdown("### 🎭 เลือกมุมมอง")
+        st.session_state.persona = st.radio(
+            "คุณต้องการให้อธิบายแบบไหน?",
+            ["คนทั่วไป", "นักคณิตศาสตร์"],
+            index=0 if st.session_state.persona == "คนทั่วไป" else 1,
+            help="คนทั่วไป: ภาษาบ้านๆ เข้าใจง่าย | นักคณิตศาสตร์: อธิบายด้วยหลักการและสมการ"
+        )
+        st.markdown("---")
+    return st.session_state.persona
+
+
+def render_explanation(layman: str, math: str, formula: str = None) -> None:
+    persona = st.session_state.get("persona", "คนทั่วไป")
+    if persona == "นักคณิตศาสตร์":
+        st.markdown(f"**🔬 มุมมองนักคณิตศาสตร์:** {math}")
+        if formula:
+            st.latex(formula)
+    else:
+        st.markdown(f"**💡 อธิบายง่ายๆ:** {layman}")

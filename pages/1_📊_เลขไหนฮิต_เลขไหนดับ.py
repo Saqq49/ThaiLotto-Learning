@@ -1,12 +1,13 @@
 import streamlit as st
 import plotly.graph_objects as go
 import pandas as pd
-from lotto.theme import inject_css, apply_layout, CRIMSON, GOLD, PANEL, TEXT, TEXT_DARK, PANEL_WHITE
+from lotto.theme import inject_css, apply_layout, CRIMSON, GOLD, PANEL, TEXT, TEXT_DARK, PANEL_WHITE, init_persona, render_explanation
 from lotto.data_loader import load_data, compute_last2_frequency, filter_by_date
 from lotto.stats import compute_last2_heatmap_matrix, compute_max_drawdown_per_number, get_hot_cold_numbers
 
 st.set_page_config(page_title="เลขไหนฮิต เลขไหนดับ", page_icon="📊", layout="wide")
 inject_css()
+init_persona()
 
 df = st.session_state["df"] if "df" in st.session_state else load_data()
 if df.empty:
@@ -82,7 +83,11 @@ with col_cold:
 # --- Max Drawdown ---
 st.markdown("---")
 st.subheader("📉 Max Drawdown per Number")
-st.caption("ทิ้งช่วงนานที่สุด (จำนวนงวด) ก่อนที่เลขนั้นจะกลับมาออกอีกครั้ง")
+render_explanation(
+    "ช่วงจำศีลของเลข - ดูว่าเลขไหนเคยหายหน้าไปนานที่สุดกี่งวด",
+    "Max Drawdown (Maximum Gap) คำนวณจากระยะห่างที่มากที่สุดระหว่างการออกของเลขเดียวกันในชุดข้อมูลอนุกรมเวลา",
+    r"MaxGap(x) = \max_{i} (t_{x, i+1} - t_{x, i} - 1)"
+)
 
 dd_df = compute_max_drawdown_per_number(filtered)
 

@@ -1,5 +1,5 @@
 import streamlit as st
-from lotto.theme import inject_css, render_metric
+from lotto.theme import inject_css, render_metric, init_persona
 from lotto.data_loader import load_data
 
 st.set_page_config(
@@ -10,6 +10,7 @@ st.set_page_config(
 )
 
 inject_css()
+init_persona()
 
 if "df" not in st.session_state:
     st.session_state.df = load_data()

@@ -3,11 +3,12 @@ import plotly.graph_objects as go
 import streamlit as st
 
 from lotto.data_loader import load_data
-from lotto.theme import CRIMSON, GOLD, GOLD_DARK, apply_layout, inject_css, render_metric
+from lotto.theme import CRIMSON, GOLD, GOLD_DARK, apply_layout, inject_css, render_metric, init_persona, render_explanation
 
 
 st.set_page_config(page_title="ส่องโพยสถิติ", page_icon="📋", layout="wide")
 inject_css()
+init_persona()
 
 # Load data
 df = st.session_state["df"] if "df" in st.session_state else load_data()
@@ -46,6 +47,13 @@ with m_cols[2]:
     render_metric("ความเป๊ะของข้อมูล", f"{integrity_score:.1f}%")
 with m_cols[3]:
     render_metric("งวดล่าสุด", latest["Draw_Date"].strftime("%d/%b/%y"))
+
+st.markdown("---")
+
+layman_integrity = "ความเป๊ะของข้อมูล - เช็กว่ามีงวดไหนข้อมูลหายหรือพิมพ์ผิดไหม ถ้าเต็ม 100 คือข้อมูลเนียนกริบ"
+math_integrity = "Integrity Score คำนวณจากสัดส่วนของข้อมูลที่สมบูรณ์ (Complete cases) ในคอลัมน์ที่จำเป็น (Essential fields)"
+formula_integrity = r"Integrity = \frac{\sum_{i \in Essential} N_{total} - N_{missing, i}}{\text{len}(Essential) \times N_{total}} \times 100\%"
+render_explanation(layman_integrity, math_integrity, formula_integrity)
 
 st.markdown("---")
 

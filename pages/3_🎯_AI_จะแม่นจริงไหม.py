@@ -1,12 +1,13 @@
 import streamlit as st
 import plotly.graph_objects as go
 import pandas as pd
-from lotto.theme import inject_css, apply_layout, CRIMSON, GOLD, TEXT_DARK, PANEL_WHITE
+from lotto.theme import inject_css, apply_layout, CRIMSON, GOLD, TEXT_DARK, PANEL_WHITE, init_persona, render_explanation
 from lotto.data_loader import load_data
 from lotto.walk_forward import walk_forward_validate
 
 st.set_page_config(page_title="AI จะแม่นจริงไหม?", page_icon="🎯", layout="wide")
 inject_css()
+init_persona()
 
 df = st.session_state["df"] if "df" in st.session_state else load_data()
 if df.empty:
@@ -15,6 +16,12 @@ if df.empty:
 
 st.title("🎯 AI จะแม่นจริงไหม?")
 st.error("⚠️ หน้านี้เรามาจับโป๊ะ AI — วัดกันไปเลยว่าถ้าให้ AI เลือกเลขให้ย้อนหลัง มันจะทายถูกบ่อยกว่าการสุ่มไหม")
+
+render_explanation(
+    "ลองทายเลขย้อนหลัง - สมมติว่าเราย้อนเวลากลับไป แล้วใช้ข้อมูลที่มีในตอนนั้นทายเลขงวดถัดไปดูว่าถูกกี่ครั้ง",
+    "Walk-Forward Validation คือการจำลองการใช้งานจริงแบบ Time-Series โดยใช้ข้อมูลย้อนหลัง (Window) มาเทรนโมเดลเพื่อ Predict งวดถัดไป แล้วขยับช่วงเวลาไปข้างหน้าทีละงวด",
+    r"Accuracy = \frac{1}{T} \sum_{t=1}^{T} \mathbb{1}(y_{t+1} \in \text{TopN}(\text{Model}(X_{t-W \dots t})))"
+)
 
 with st.sidebar:
     st.header("ตั้งค่า Walk-Forward")
