@@ -41,9 +41,9 @@ m_cols = st.columns(4)
 with m_cols[0]:
     render_metric("งวดทั้งหมด", f"{total_draws:,}")
 with m_cols[1]:
-    render_metric("ช่วงเวลา", f"{date_min.year} - {date_max.year}")
+    render_metric("เก็บสถิติตั้งแต่ปี", f"{date_min.year} - {date_max.year}")
 with m_cols[2]:
-    render_metric("Integrity Score", f"{integrity_score:.1f}%")
+    render_metric("ความเป๊ะของข้อมูล", f"{integrity_score:.1f}%")
 with m_cols[3]:
     render_metric("งวดล่าสุด", latest["Draw_Date"].strftime("%d/%b/%y"))
 
@@ -58,32 +58,32 @@ missing_3digit = int(df["Last_3"].isna().sum())
 left, right = st.columns([1, 1])
 
 with left:
-    st.subheader("🛡️ Data Integrity Status")
+    st.subheader("🛡️ เช็กความเรียบร้อยของข้อมูล")
     quality_rows = [
-        {"Check": "Duplicate Dates", "Result": "✅ PASS" if duplicate_dates == 0 else "⚠️ WARN", "Detail": f"{duplicate_dates} duplicate rows"},
-        {"Check": "Last 2 Format", "Result": "✅ PASS" if invalid_last2 == 0 else "❌ FAIL", "Detail": f"{invalid_last2} invalid rows"},
-        {"Check": "Prize 1 Format", "Result": "✅ PASS" if invalid_prize1 == 0 else "❌ FAIL", "Detail": f"{invalid_prize1} invalid rows"},
-        {"Check": "Missing 3-Digits", "Result": "ℹ️ INFO", "Detail": f"{missing_3digit} records (Expected for older data)"},
+        {"หัวข้อตรวจสอบ": "งวดที่ซ้ำกัน", "ผลลัพธ์": "✅ ไม่มี" if duplicate_dates == 0 else "⚠️ มีซ้ำ", "รายละเอียด": f"{duplicate_dates} งวด"},
+        {"หัวข้อตรวจสอบ": "เลขท้าย 2 ตัว (ต้องมี 2 หลัก)", "ผลลัพธ์": "✅ ถูกต้อง" if invalid_last2 == 0 else "❌ ผิดปกติ", "รายละเอียด": f"เจอที่ผิด {invalid_last2} จุด"},
+        {"หัวข้อตรวจสอบ": "รางวัลที่ 1 (ต้องมี 6 หลัก)", "ผลลัพธ์": "✅ ถูกต้อง" if invalid_prize1 == 0 else "❌ ผิดปกติ", "รายละเอียด": f"เจอที่ผิด {invalid_prize1} จุด"},
+        {"หัวข้อตรวจสอบ": "เลขหน้า 3 ตัว (ย้อนหลัง)", "ผลลัพธ์": "ℹ️ ข้อมูล", "รายละเอียด": f"ไม่มีข้อมูล {missing_3digit} งวด (ปกติสำหรับหวยสมัยก่อน)"},
     ]
     st.table(pd.DataFrame(quality_rows))
 
 with right:
-    st.subheader("🚩 Historical Milestones")
+    st.subheader("🚩 เรื่องน่ารู้ในอดีต")
     st.info("""
-    **Sep 2015: First 3-Digits Introduction**
-    เริ่มมีการประกาศรางวัล 'เลขหน้า 3 ตัว' 2 รางวัล แทนที่ 'เลขท้าย 3 ตัว' จากเดิม 4 รางวัล เหลือ 2 รางวัล
+    **ก.ย. 2015: กำเนิดเลขหน้า 3 ตัว**
+    เริ่มมีการออก 'เลขหน้า 3 ตัว' ครั้งแรก โดยยุบรางวัล 'เลขท้าย 3 ตัว' จาก 4 รางวัล เหลือ 2 รางวัล
     
-    **Dec 2006: Data Boundary**
-    ข้อมูลเริ่มต้นเก็บสถิติเชิงลึกตั้งแต่เดือนธันวาคม 2006 เพื่อความแม่นยำของ Model
+    **ธ.ค. 2006: จุดเริ่มต้นสถิติ**
+    เราเริ่มเก็บข้อมูลแบบละเอียดตั้งแต่งวดนี้ เพื่อความแม่นยำในการวิเคราะห์
     
-    **May 2026: Prediction Window**
-    Data ล่าสุดครอบคลุมถึงงวดปัจจุบัน พร้อมสำหรับการทำ AI Reality Check
+    **พ.ค. 2026: ปัจจุบัน**
+    ข้อมูลอัปเดตถึงงวดล่าสุด พร้อมให้คุณลองเอาไปคำนวณแล้ว!
     """)
 
 st.markdown("---")
 
 # Visualization: Draws per Year
-st.subheader("📈 Historical Data Coverage")
+st.subheader("📈 ปริมาณข้อมูลในแต่ละปี")
 df["Year"] = df["Draw_Date"].dt.year
 annual_draws = df.groupby("Year").size().reset_index(name="Draws")
 
@@ -95,25 +95,25 @@ fig_annual = go.Figure(go.Bar(
 ))
 fig_annual = apply_layout(
     fig_annual,
-    title="จำนวนการออกรางวัลรายปี",
-    xaxis_title="ปี (พ.ศ. / ค.ศ.)",
+    title="จำนวนครั้งที่มีการออกรางวัลในแต่ละปี",
+    xaxis_title="ปี ค.ศ.",
     yaxis_title="จำนวนงวด",
     height=360,
 )
 st.plotly_chart(fig_annual, width="stretch")
 
 # Tabs for Details
-tab_sample, tab_schema, tab_gaps = st.tabs(["📄 Latest Records", "📂 Data Schema", "⚠️ Anomalies"])
+tab_sample, tab_schema, tab_gaps = st.tabs(["📄 ดูโพยงวดล่าสุด", "📂 โครงสร้างข้อมูล", "⚠️ จุดที่น่าสงสัย"])
 
 with tab_sample:
     st.dataframe(df.tail(15).sort_values("Draw_Date", ascending=False), width="stretch", hide_index=True)
 
 with tab_schema:
     schema = pd.DataFrame({
-        "Field": df.columns,
-        "Type": [str(t) for t in df.dtypes],
-        "Non-Null": [int(df[c].count()) for c in df.columns],
-        "Example": [str(df[c].dropna().iloc[-1]) if not df[c].dropna().empty else "N/A" for c in df.columns],
+        "ชื่อคอลัมน์": df.columns,
+        "ประเภทข้อมูล": [str(t) for t in df.dtypes],
+        "ข้อมูลที่มีอยู่": [int(df[c].count()) for c in df.columns],
+        "ตัวอย่างข้อมูล": [str(df[c].dropna().iloc[-1]) if not df[c].dropna().empty else "N/A" for c in df.columns],
     })
     st.dataframe(schema, width="stretch", hide_index=True)
 
@@ -122,7 +122,7 @@ with tab_gaps:
     gaps["Gap"] = gaps["Draw_Date"].diff().dt.days
     anomalies = gaps[gaps["Gap"] > 25]
     if not anomalies.empty:
-        st.warning(f"พบช่วงห่างระหว่างงวดผิดปกติ (> 25 วัน) จำนวน {len(anomalies)} รายการ")
+        st.warning(f"พบช่วงห่างระหว่างงวดนานผิดปกติ (> 25 วัน) ทั้งหมด {len(anomalies)} รายการ")
         st.dataframe(anomalies, width="stretch")
     else:
-        st.success("ไม่พบช่องว่างข้อมูล (Gaps) ที่ผิดปกติ")
+        st.success("ไม่พบช่องว่างข้อมูลที่น่าสงสัย (ข้อมูลครบถ้วนต่อเนื่องดี)")

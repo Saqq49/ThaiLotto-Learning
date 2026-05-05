@@ -25,8 +25,16 @@ PLOTLY_LAYOUT = dict(
     colorway=[CRIMSON, GOLD, "#E8A838", "#FF6B6B", "#4488CC"],
     margin=dict(l=40, r=40, t=50, b=40),
     hoverlabel=dict(bgcolor=PANEL_ALT, font_color=CHAMPAGNE, bordercolor=GOLD),
-    xaxis=dict(gridcolor="#FFFFFF08", linecolor="#FFFFFF12", zerolinecolor="#FFFFFF12"),
-    yaxis=dict(gridcolor="#FFFFFF08", linecolor="#FFFFFF12", zerolinecolor="#FFFFFF12"),
+    xaxis=dict(
+        gridcolor="rgba(255,255,255,0.03)",
+        linecolor="rgba(255,255,255,0.07)",
+        zerolinecolor="rgba(255,255,255,0.07)",
+    ),
+    yaxis=dict(
+        gridcolor="rgba(255,255,255,0.03)",
+        linecolor="rgba(255,255,255,0.07)",
+        zerolinecolor="rgba(255,255,255,0.07)",
+    ),
 )
 
 CUSTOM_CSS = """
@@ -234,7 +242,7 @@ CUSTOM_CSS = """
     [data-testid="stDataFrame"] {
         border: 1px solid #D4AF3722;
         border-radius: 10px;
-        overflow: hidden;
+        overflow: visible;
     }
 
     /* ── Info / Warning / Error boxes ── */
@@ -247,10 +255,10 @@ CUSTOM_CSS = """
     @media (max-width: 768px) {
         h1 { font-size: 1.5rem !important; }
         .metric-value { font-size: 1.5rem !important; }
-        [data-testid="stHorizontalBlock"] { flex-wrap: wrap !important; }
+        [data-testid="stHorizontalBlock"] { flex-wrap: wrap !important; overflow: visible !important; }
         [data-testid="stHorizontalBlock"] > div {
-            min-width: calc(50% - 0.5rem) !important;
-            flex: 1 1 calc(50% - 0.5rem) !important;
+            min-width: min(100%, 18rem) !important;
+            flex: 1 1 min(100%, 18rem) !important;
         }
     }
 </style>

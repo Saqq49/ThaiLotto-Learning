@@ -6,18 +6,19 @@ This file tracks project progress across AI collaborators (Claude, Codex, Gemini
 
 ## Current Session
 
-**Date**: 2026-05-04  
-**Status**: MVP verified, updated with 2026 data, visually polished with Thai Prestige theme, and ready for deployment review.  
-**Session Focus**: Environment repair, code fixes, unit testing, data quality checks, performance, safety copy, visual polish, deployment readiness, and final review.
+**Date**: 2026-05-05  
+**Status**: MVP verified, updated with 2026 data, deployed on Streamlit Cloud, and patched for the latest display/runtime issue.  
+**Session Focus**: Runtime display fix, Plotly theme compatibility, responsive layout cleanup, x86_64 environment repair, verification, and deploy handoff.
 
 ## Current Reality Check
 
-The environment is now functional again in the current Codex shell on `x86_64` (Python 3.13). The NumPy architecture mismatch was fixed by reinstalling binary packages inside `.venv` for x86_64. The core logic has been verified with unit tests, and the dataset is current up to May 2026.
+The environment is now functional again in the current Codex shell on `x86_64` (Python 3.13). The NumPy architecture mismatch was fixed by reinstalling binary packages inside `.venv` for x86_64. The core logic has been verified with unit tests, the deployed dashboard exists on Streamlit Cloud, and the latest display/runtime issue has been fixed locally.
 
 - `tests/` now contains unit tests for stats, predictors, backtesting, and walk-forward validation.
 - `lotto/backtest.py` has been updated to use official payout rules (2,000 THB for Last_2) and support multi-number strategies.
 - The dataset now includes manual updates for 2025 and 2026 (total 461 draws).
-- `pages/4_💰_Strategy_Backtester.py` has been updated to match the improved backtesting logic.
+- Current deployed URL: `https://thailotto-learning-w3xpaw8apwaungtaktzkxd.streamlit.app/`
+- Latest fix waiting to be pushed/redeployed if not already done: Plotly theme `gridcolor`/`linecolor` changed from 8-digit hex alpha values to `rgba(...)`, because Plotly rejects values like `#FFFFFF08` at runtime.
 
 ## Completed Work
 
@@ -153,6 +154,32 @@ The environment is now functional again in the current Codex shell on `x86_64` (
 - [x] **Deployed to Streamlit Community Cloud**: `https://thailotto-learning-w3xpaw8apwaungtaktzkxd.streamlit.app/`
 - [x] Verification: `py_compile` OK, **27/27 tests passed**.
 
+### Session 15: Runtime Display Fix by Codex (2026-05-05)
+
+- [x] User reported an error and incomplete display after deployment/theme work.
+- [x] Re-read current implementation and verified the active page filenames are Thai-localized pages.
+- [x] Repaired the current Codex `.venv` for the active `x86_64` shell by force-reinstalling binary packages:
+  - `numpy`
+  - `pandas`
+  - `scipy`
+  - `scikit-learn`
+  - `pyarrow`
+- [x] Found the real Streamlit runtime error with AppTest:
+  - Plotly rejected 8-digit hex alpha colors in `lotto/theme.py` (`#FFFFFF08`, `#FFFFFF12`).
+  - Replaced them with valid `rgba(255,255,255,...)` values in `PLOTLY_LAYOUT`.
+- [x] Fixed remaining Streamlit display/deprecation cleanup on the Data Overview page:
+  - replaced stale `use_container_width=True` with `width="stretch"`.
+  - cast schema examples to string to avoid mixed-type Arrow rendering issues.
+- [x] Improved responsive display behavior:
+  - changed dataframe wrapper overflow from hidden to visible.
+  - adjusted mobile Streamlit column wrapping to reduce clipped content on narrow screens.
+- [x] Kept existing user/Gemini Thai copy edits in the Data Overview page instead of reverting them.
+- [x] Verification:
+  - `py_compile`: passed
+  - tests: **27/27 passed** in 1.66s
+  - data quality script: passed
+  - AppTest smoke test: `app.py` and all 6 Thai pages passed
+
 ### Session 13: Codex Final UI/Deployment Review (2026-05-04)
 
 - [x] Confirmed Gemini's Session 12 UI update was present in `session.md`.
@@ -169,7 +196,7 @@ The environment is now functional again in the current Codex shell on `x86_64` (
 
 ## Current Blockers
 
-None. Dashboard is polished and ready for final deployment review.
+None. Dashboard is polished, deployed, and the latest runtime/display issue has been fixed locally. Push the Session 15 commit to trigger Streamlit Cloud redeploy if it has not already been pushed.
 
 ## Initial Codex Review Findings
 ... (unchanged)
@@ -178,7 +205,7 @@ None. Dashboard is polished and ready for final deployment review.
 
 - **UI Polish**: The "Thai Prestige" theme is now the default. Ensure any new pages use `inject_css()` and `render_metric()` from `lotto.theme`.
 - **Mobile Check**: The CSS hack in `lotto/theme.py` forces 2-column layout on small screens. Verify readability on actual mobile devices if possible.
-- **Deployment**: The app is ready for Streamlit Community Cloud. Ensure `requirements.txt` is updated with all necessary packages.
+- **Deployment**: The app is already on Streamlit Community Cloud. Push fixes to `main` to trigger redeploy.
 
 ## Next Steps
 
@@ -191,7 +218,8 @@ None. Dashboard is polished and ready for final deployment review.
 - [x] Improve safety/product copy on Prediction, Reality Check, and Seasonality pages.
 - [x] Improve responsive layout and chart readability for mobile.
 - [x] Finalize the "Red-Gold" theme application across all pages.
-- [ ] Deploy to Streamlit Community Cloud.
+- [x] Deploy to Streamlit Community Cloud.
+- [x] Fix post-deploy runtime/display issue caused by Plotly theme color values.
 
 ## Key Decisions Made
 ... (unchanged)
@@ -212,3 +240,5 @@ None. Dashboard is polished and ready for final deployment review.
 | 2026-05-04 | Non-UI Polish | Completed, 27/27 tests pass | Gemini UI research / responsive polish |
 | 2026-05-04 | Visual Polish | Completed, 27/27 tests pass | Final Deployment |
 | 2026-05-04 | Final UI Review | Completed, 27/27 tests pass | Streamlit Community Cloud deploy |
+| 2026-05-04 | Dark Luxury Deploy | Completed, deployed to Streamlit Cloud | Post-deploy QA |
+| 2026-05-05 | Runtime Display Fix | Completed locally, 27/27 tests pass, AppTest all pages pass | Push/redeploy |
