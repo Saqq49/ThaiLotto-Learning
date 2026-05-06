@@ -1,7 +1,7 @@
 import streamlit as st
 import plotly.graph_objects as go
 import pandas as pd
-from lotto.theme import inject_css, apply_layout, CRIMSON, GOLD, init_persona, render_explanation, mode_text, is_math_mode
+from lotto.theme import inject_css, apply_layout, PLOTLY_CONFIG, CRIMSON, GOLD, init_persona, render_explanation, mode_text, is_math_mode
 from lotto.data_loader import load_data
 from lotto.backtest import run_backtest, PRIZE_PAYOUTS, TICKET_PRICE
 
@@ -151,7 +151,7 @@ fig_eq = apply_layout(
     yaxis_title=mode_text("เงินทุน (฿)", "Equity (฿)"),
     height=420,
 )
-st.plotly_chart(fig_eq, width="stretch")
+st.plotly_chart(fig_eq, width="stretch", config=PLOTLY_CONFIG)
 
 # Detail table
 st.subheader(mode_text("📋 รายละเอียดทุกงวด", "📋 Transaction Log"))

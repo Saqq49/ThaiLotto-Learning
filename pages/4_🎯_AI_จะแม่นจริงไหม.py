@@ -1,7 +1,7 @@
 import streamlit as st
 import plotly.graph_objects as go
 import pandas as pd
-from lotto.theme import inject_css, apply_layout, CRIMSON, GOLD, init_persona, render_explanation, mode_text
+from lotto.theme import inject_css, apply_layout, PLOTLY_CONFIG, CRIMSON, GOLD, init_persona, render_explanation, mode_text
 from lotto.data_loader import load_data
 from lotto.walk_forward import walk_forward_validate
 
@@ -119,7 +119,7 @@ fig_bar = apply_layout(
     yaxis_title=mode_text("อัตราถูก (%)", "Accuracy (%)"),
     height=400,
 )
-st.plotly_chart(fig_bar, width="stretch")
+st.plotly_chart(fig_bar, width="stretch", config=PLOTLY_CONFIG)
 
 # Rolling accuracy over time
 st.subheader(mode_text("📉 ความแม่นในแต่ละช่วงเวลา", "📉 Rolling Accuracy"))
@@ -150,7 +150,7 @@ fig_roll = apply_layout(
     yaxis_title=mode_text("อัตราถูก (%)", "Accuracy (%)"),
     height=350,
 )
-st.plotly_chart(fig_roll, width="stretch")
+st.plotly_chart(fig_roll, width="stretch", config=PLOTLY_CONFIG)
 
 # Conclusion
 best_acc = summary["ความแม่นยำ"].max() * 100

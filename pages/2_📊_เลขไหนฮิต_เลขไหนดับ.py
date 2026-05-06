@@ -1,7 +1,7 @@
 import streamlit as st
 import plotly.graph_objects as go
 import pandas as pd
-from lotto.theme import inject_css, apply_layout, CRIMSON, GOLD, TEXT, init_persona, render_explanation, mode_text
+from lotto.theme import inject_css, apply_layout, PLOTLY_CONFIG, CRIMSON, GOLD, GOLD_SOLID, TEXT_PRIMARY as TEXT, init_persona, render_explanation, mode_text
 from lotto.data_loader import load_data, compute_last2_frequency
 from lotto.stats import compute_last2_heatmap_matrix, compute_max_drawdown_per_number, get_hot_cold_numbers
 
@@ -82,7 +82,7 @@ fig_heat.update_layout(
         layer="above",
     )]
 )
-st.plotly_chart(fig_heat, width="stretch")
+st.plotly_chart(fig_heat, width="stretch", config=PLOTLY_CONFIG)
 
 # --- Hot / Cold ---
 hot, cold = get_hot_cold_numbers(freq, top_n=10)
@@ -139,7 +139,7 @@ with tab1:
         yaxis_title=mode_text("จำนวนงวด", "Draw Count"),
         height=420,
     )
-    st.plotly_chart(fig_dd, width="stretch")
+    st.plotly_chart(fig_dd, width="stretch", config=PLOTLY_CONFIG)
 
 with tab2:
     display_df = dd_df.copy().rename(columns={

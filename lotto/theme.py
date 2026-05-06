@@ -92,7 +92,14 @@ PLOTLY_LAYOUT = dict(
     hoverlabel=dict(bgcolor="#1A0800", font_color=TEXT_PRIMARY, bordercolor=GOLD_SOLID),
     xaxis=dict(gridcolor="rgba(201,168,76,0.08)", zerolinecolor="rgba(201,168,76,0.15)"),
     yaxis=dict(gridcolor="rgba(201,168,76,0.08)", zerolinecolor="rgba(201,168,76,0.15)"),
+    dragmode=False,
 )
+
+PLOTLY_CONFIG = {
+    "scrollZoom": False,
+    "displayModeBar": False,
+    "doubleClick": False,
+}
 
 CUSTOM_CSS = f"""
 <style>

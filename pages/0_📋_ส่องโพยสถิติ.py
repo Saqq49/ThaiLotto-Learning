@@ -3,7 +3,7 @@ import plotly.graph_objects as go
 import streamlit as st
 
 from lotto.data_loader import load_data
-from lotto.theme import CRIMSON, GOLD, GOLD_DARK, GOLD_SOLID, GOLD_GRADIENT, apply_layout, inject_css, render_metrics_row, init_persona, render_explanation, mode_text, is_math_mode
+from lotto.theme import CRIMSON, GOLD, GOLD_DARK, GOLD_SOLID, GOLD_GRADIENT, apply_layout, PLOTLY_CONFIG, inject_css, render_metrics_row, init_persona, render_explanation, mode_text, is_math_mode
 
 
 st.set_page_config(page_title="ส่องโพยสถิติ", page_icon="📋", layout="wide")
@@ -134,7 +134,7 @@ fig_annual = apply_layout(
     yaxis_title=mode_text("จำนวนงวด", "Draw Count"),
     height=360,
 )
-st.plotly_chart(fig_annual, width="stretch")
+st.plotly_chart(fig_annual, width="stretch", config=PLOTLY_CONFIG)
 
 # Tabs for Details
 tab_sample, tab_schema, tab_gaps = st.tabs([

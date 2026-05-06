@@ -1,6 +1,6 @@
 import streamlit as st
 import plotly.graph_objects as go
-from lotto.theme import inject_css, apply_layout, GOLD, CRIMSON, init_persona, render_explanation, mode_text, is_math_mode, GOLD_BRUSHED, TEXT_MUTED
+from lotto.theme import inject_css, apply_layout, PLOTLY_CONFIG, GOLD, CRIMSON, init_persona, render_explanation, mode_text, is_math_mode, GOLD_BRUSHED, TEXT_MUTED
 from lotto.data_loader import load_data
 from lotto.predictors import frequency_predictor, overdue_predictor, recency_weighted_predictor, random_predictor
 
@@ -101,6 +101,6 @@ fig = go.Figure(go.Bar(x=nums, y=scores, marker_color=colors,
                        hovertemplate=mode_text("เลข: %{x}<br>คะแนน: %{y:.4f}<extra></extra>", "Node: %{x}<br>Score: %{y:.4f}<extra></extra>")))
 fig = apply_layout(fig, title=mode_text("คะแนนของแต่ละเลข (สีแดง = เลขที่วิธีนี้เลือก)", f"Score Map ({method})"),
                    xaxis_title=mode_text("เลข", "Node"), yaxis_title=mode_text("คะแนน", "Score"), height=350)
-st.plotly_chart(fig, width="stretch")
+st.plotly_chart(fig, width="stretch", config=PLOTLY_CONFIG)
 
 st.markdown(f'<div class="disclaimer">{mode_text(f"🎲 ถ้าสุ่มแบบปกติ ควรได้ {top_n:.1f}% — ถ้าวิธีคำนวณไม่ได้ดีกว่านี้อย่างสม่ำเสมอ แปลว่ายังไม่ได้เปรียบอะไรจากสถิติเลย", f"🎲 Random Top-{top_n} baseline is {top_n:.1f}%. A method needs consistent out-of-sample lift before it should be interpreted as useful.")}</div>', unsafe_allow_html=True)
